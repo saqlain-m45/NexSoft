@@ -65,8 +65,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 15px rgba(14, 165, 164, 0.2);
-    /* Soft initial glow */
+    box-shadow: 0 0 20px rgba(14, 165, 164, 0.4), 0 0 40px rgba(14, 165, 164, 0.1);
+    /* Doubled the glow layers */
 }
 
 .cursor-inner {
@@ -79,38 +79,38 @@ body {
     z-index: 10000;
     transform: translate(-50%, -50%);
     transition: width 0.2s, height 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 10px var(--secondary);
-    /* Core glow */
+    box-shadow: 0 0 15px var(--secondary), 0 0 30px rgba(14, 165, 164, 0.6);
+    /* More intense core glow */
 }
 
 /* Hover States */
 .cursor-outer.cursor-hover {
     width: 60px;
     height: 60px;
-    background-color: rgba(14, 165, 164, 0.1);
+    background-color: rgba(14, 165, 164, 0.15);
     border: 1px solid var(--secondary);
-    box-shadow: 0 0 25px rgba(14, 165, 164, 0.5);
-    /* Enhanced hover glow */
-    animation: cursorPulse 1.5s infinite;
+    box-shadow: 0 0 35px rgba(14, 165, 164, 0.7), 0 0 70px rgba(14, 165, 164, 0.3);
+    /* Ultra glow on hover */
+    animation: cursorPulse 1.2s infinite;
 }
 
 .cursor-inner.cursor-hover {
     width: 10px;
     height: 10px;
-    box-shadow: 0 0 20px var(--secondary);
+    box-shadow: 0 0 25px var(--secondary), 0 0 50px rgba(14, 165, 164, 0.8);
 }
 
 @keyframes cursorPulse {
     0% {
-        box-shadow: 0 0 15px rgba(14, 165, 164, 0.4);
+        box-shadow: 0 0 20px rgba(14, 165, 164, 0.5), 0 0 40px rgba(14, 165, 164, 0.2);
     }
 
     50% {
-        box-shadow: 0 0 35px rgba(14, 165, 164, 0.7);
+        box-shadow: 0 0 45px rgba(14, 165, 164, 0.8), 0 0 90px rgba(14, 165, 164, 0.4);
     }
 
     100% {
-        box-shadow: 0 0 15px rgba(14, 165, 164, 0.4);
+        box-shadow: 0 0 20px rgba(14, 165, 164, 0.5), 0 0 40px rgba(14, 165, 164, 0.2);
     }
 }
 
