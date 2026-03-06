@@ -237,4 +237,39 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ================================================================
+    // 10. CUSTOM CURSOR LOGIC
+    // ================================================================
+    const cursorOuter = document.querySelector('.cursor-outer');
+    const cursorInner = document.querySelector('.cursor-inner');
+    const interactiveElements = document.querySelectorAll('a, button, .btn, .service-card, .footer-links a, .social-link, .navbar-toggler, .newsletter-btn');
+
+    if (cursorOuter && cursorInner) {
+        document.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Inner dot follows mouse exactly
+            cursorInner.style.left = `${posX}px`;
+            cursorInner.style.top = `${posY}px`;
+
+            // Outer circle follows with a slight delay for smooth effect
+            cursorOuter.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: 'forwards' });
+        });
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOuter.classList.add('cursor-hover');
+                cursorInner.classList.add('cursor-hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOuter.classList.remove('cursor-hover');
+                cursorInner.classList.remove('cursor-hover');
+            });
+        });
+    }
+
 });
