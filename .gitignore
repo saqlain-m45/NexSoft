@@ -1,0 +1,33 @@
+# NexSoft Hub — .gitignore
+
+# ── Sensitive config (DB passwords, SMTP credentials) ──
+# Uncomment below if you want to exclude database config:
+# config/database.php
+# config/mailer.php
+
+# ── Uploaded user files (large binary files) ──
+assets/uploads/team/*
+assets/uploads/projects/*
+assets/uploads/blogs/*
+!assets/uploads/team/.gitkeep
+!assets/uploads/projects/.gitkeep
+!assets/uploads/blogs/.gitkeep
+
+# ── macOS system files ──
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# ── IDE / Editor ──
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── PHP / Composer ──
+vendor/
+composer.lock
+
+# ── Logs ──
+*.log
+error_log

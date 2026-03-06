@@ -1,0 +1,121 @@
+<?php
+require_once __DIR__ . '/auth.php';
+adminCheck();
+
+$db = getDB();
+
+$projectCount     = (int)$db->query("SELECT COUNT(*) FROM projects")->fetchColumn();
+$blogCount        = (int)$db->query("SELECT COUNT(*) FROM blog_posts")->fetchColumn();
+$registrationCount = (int)$db->query("SELECT COUNT(*) FROM registrations")->fetchColumn();
+$messageCount     = (int)$db->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
+
+$recentMessages = $db->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll();
+$recentRegs     = $db->query("SELECT * FROM registrations ORDER BY created_at DESC LIMIT 5")->fetchAll();
+
+$pageTitle  = 'Dashboard — NexSoft Hub Admin';
+$activePage = 'dashboard';
+require_once __DIR__ . '/layout-header.php';
+?>
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+    <?php
+    $stats = [
+        ['icon'=>'bi-folder-fill','count'=>$projectCount,'label'=>'Total Projects','class'=>'blue','link'=>'projects.php'],
+        ['icon'=>'bi-journal-richtext','count'=>$blogCount,'label'=>'Blog Posts','class'=>'teal','link'=>'blogs.php'],
+        ['icon'=>'bi-people-fill','count'=>$registrationCount,'label'=>'Registrations','class'=>'green','link'=>'registrations.php'],
+        ['icon'=>'bi-chat-left-text-fill','count'=>$messageCount,'label'=>'Messages','class'=>'orange','link'=>'messages.php'],
+    ];
+    foreach($stats as $s): ?>
+    <div class="col-6 col-lg-3">
+        <a href="<?php echo adminUrl($s['link']); ?>" style="text-decoration:none;">
+            <div class="stat-card">
+                <div class="stat-icon <?php echo $s['class']; ?>"><i class="bi <?php echo $s['icon']; ?>"></i></div>
+                <div class="stat-number"><?php echo $s['count']; ?></div>
+                <div class="stat-label"><?php echo $s['label']; ?></div>
+            </div>
+        </a>
+    </div>
+    <?php endforeach; ?>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <span class="admin-card-title"><i class="bi bi-lightning-fill me-2 text-warning"></i>Quick Actions</span>
+            </div>
+            <div class="admin-card-body">
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                    <a href="<?php echo adminUrl('projects.php?action=add'); ?>" class="btn-admin-primary"><i class="bi bi-plus-circle"></i> Add Project</a>
+                    <a href="<?php echo adminUrl('blogs.php?action=add'); ?>" class="btn-admin-primary"><i class="bi bi-plus-circle"></i> Add Blog Post</a>
+                    <a href="<?php echo adminUrl('registrations.php'); ?>" class="btn-admin-secondary"><i class="bi bi-people"></i> View Registrations</a>
+                    <a href="<?php echo adminUrl('messages.php'); ?>" class="btn-admin-secondary"><i class="bi bi-envelope"></i> View Messages</a>
+                    <a href="/NexSoft/" target="_blank" class="btn-admin-secondary"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Data Tables -->
+<div class="row g-4">
+    <!-- Recent Messages -->
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <span class="admin-card-title"><i class="bi bi-chat-left-text me-2" style="color:var(--secondary);"></i>Recent Messages</span>
+                <a href="<?php echo adminUrl('messages.php'); ?>" class="btn-action btn-view">View All</a>
+            </div>
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead><tr><th>Name</th><th>Email</th><th>Date</th></tr></thead>
+                    <tbody>
+                        <?php if (empty($recentMessages)): ?>
+                        <tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">No messages yet</td></tr>
+                        <?php else: ?>
+                        <?php foreach($recentMessages as $msg): ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($msg['name']); ?></strong></td>
+                            <td style="color:var(--text-muted);"><?php echo htmlspecialchars($msg['email']); ?></td>
+                            <td><span class="badge-teal"><?php echo date('M d', strtotime($msg['created_at'])); ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Registrations -->
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <span class="admin-card-title"><i class="bi bi-people me-2" style="color:var(--secondary);"></i>Recent Registrations</span>
+                <a href="<?php echo adminUrl('registrations.php'); ?>" class="btn-action btn-view">View All</a>
+            </div>
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead><tr><th>Name</th><th>Skills</th><th>Date</th></tr></thead>
+                    <tbody>
+                        <?php if (empty($recentRegs)): ?>
+                        <tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">No registrations yet</td></tr>
+                        <?php else: ?>
+                        <?php foreach($recentRegs as $reg): ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($reg['name']); ?></strong></td>
+                            <td style="color:var(--text-muted);"><?php echo htmlspecialchars(mb_strimwidth($reg['skills'] ?? '', 0, 30, '...')); ?></td>
+                            <td><span class="badge-green"><?php echo date('M d', strtotime($reg['created_at'])); ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once __DIR__ . '/layout-footer.php'; ?>
