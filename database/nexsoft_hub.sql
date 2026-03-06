@@ -95,3 +95,76 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+-- Table: site_settings
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `site_settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `setting_key` (`setting_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Default site settings
+INSERT INTO `site_settings` (`setting_key`, `setting_value`) VALUES
+('site_name', 'NexSoft Hub'),
+('meta_title', 'NexSoft Hub — Premium Software Consulting Agency'),
+('meta_description', 'NexSoft Hub — Premium Software Consulting Agency delivering world-class Web, App, and Digital Solutions.'),
+('meta_keywords', 'software development, web design, app development, UI/UX, digital marketing'),
+('site_email', 'hello@nexsofthub.com'),
+('site_phone', '+1 (555) 234-5678'),
+('site_address', '123 Innovation Drive, Tech City, CA 94105'),
+('facebook_link', 'https://facebook.com'),
+('twitter_link', 'https://twitter.com'),
+('linkedin_link', 'https://linkedin.com'),
+('instagram_link', 'https://instagram.com'),
+('github_link', 'https://github.com'),
+('smtp_host', 'smtp.gmail.com'),
+('smtp_port', '587'),
+('smtp_user', 'user@gmail.com'),
+('smtp_pass', 'password'),
+('smtp_encryption', 'tls'),
+('google_analytics_id', ''),
+('custom_head_scripts', ''),
+('custom_footer_scripts', ''),
+('custom_cursor_enabled', '1'),
+('maintenance_mode', '0');
+
+-- --------------------------------------------------------
+-- Table: services
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `features` text DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  `icon` varchar(100) DEFAULT 'bi-gear',
+  `order_no` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Default services
+INSERT INTO `services` (`title`, `description`, `features`, `tags`, `icon`) VALUES
+('Web Development', 'High-performance websites tailored to your business needs.', 'React Frontends,Node.js Backends,RESTful APIs,Cloud Hosting', 'React,Node.js,PHP,MySQL', 'bi-laptop'),
+('App Development', 'Custom iOS and Android applications for a seamless mobile experience.', 'iOS & Android Apps,Offline Support,Push Notifications,In-app Purchases', 'Flutter,Swift,Kotlin,Firebase', 'bi-phone'),
+('UI/UX Design', 'Beautiful and intuitive interfaces focused on user engagement.', 'User Research,Prototyping,Design Systems,Logo Design', 'Figma,Adobe XD,Illustrator,UX', 'bi-palette');
+
+-- --------------------------------------------------------
+-- Table: testimonials
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testimonials` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(255) NOT NULL,
+  `designation` varchar(255) DEFAULT NULL,
+  `feedback` text NOT NULL,
+  `rating` int(1) DEFAULT 5,
+  `client_image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

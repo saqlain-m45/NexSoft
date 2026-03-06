@@ -26,70 +26,41 @@
             </div>
         </div>
         <div class="row g-4">
-            <?php
-            $services = [
-                [
-                    'icon'     => 'bi-globe2',
-                    'title'    => 'Web Development',
-                    'desc'     => 'We build powerful, high-performance web applications using the latest frameworks and best practices. From corporate websites to complex SaaS platforms, we engineer digital experiences that drive results.',
-                    'features' => ['React, Next.js, Vue.js frontends','PHP, Node.js, Python backends','RESTful API architecture','MySQL, PostgreSQL, MongoDB','Cloud deployment (AWS, GCP, Vercel)','Performance & SEO optimization'],
-                    'tags'     => ['React','PHP','Node.js','MySQL'],
-                ],
-                [
-                    'icon'     => 'bi-phone',
-                    'title'    => 'App Development',
-                    'desc'     => 'Native and cross-platform mobile applications for iOS and Android built with Flutter and React Native. We create intuitive, feature-rich apps that users love and businesses depend on.',
-                    'features' => ['Flutter & React Native cross-platform','Native iOS (Swift) & Android (Kotlin)','Offline-first architecture','Push notification systems','In-app purchase integration','4.5+ App Store ratings target'],
-                    'tags'     => ['Flutter','React Native','iOS','Android'],
-                ],
-                [
-                    'icon'     => 'bi-wordpress',
-                    'title'    => 'WordPress Development',
-                    'desc'     => 'Custom WordPress development that goes beyond themes. We build highly optimized, secure, and scalable WordPress solutions including WooCommerce stores, membership sites, and complex CMS platforms.',
-                    'features' => ['Custom theme development','Plugin architecture & development','WooCommerce e-commerce','Gutenberg block development','Performance optimization','Security hardening & backups'],
-                    'tags'     => ['WordPress','WooCommerce','PHP','Gutenberg'],
-                ],
-                [
-                    'icon'     => 'bi-palette2',
-                    'title'    => 'UI/UX & Graphic Design',
-                    'desc'     => 'Award-winning design that combines aesthetics with strategy. From initial wireframes to polished final designs, we create interfaces that are both visually stunning and conversion-optimized.',
-                    'features' => ['User research & persona development','Wireframing & prototyping','Design system creation','Figma / Adobe XD designs','Brand identity & logo design','Usability testing & iteration'],
-                    'tags'     => ['Figma','Adobe XD','Illustrator','Prototyping'],
-                ],
-                [
-                    'icon'     => 'bi-pen',
-                    'title'    => 'Content Writing',
-                    'desc'     => 'Strategic content that ranks in search engines and resonates with your audience. Our writers combine SEO expertise with compelling storytelling to produce content that drives traffic and converts visitors.',
-                    'features' => ['SEO-optimized blog content','Website copywriting','Technical writing & documentation','Social media content calendars','Email marketing copy','Product descriptions & case studies'],
-                    'tags'     => ['SEO','Copywriting','Blogging','Social Media'],
-                ],
-                [
-                    'icon'     => 'bi-camera-video',
-                    'title'    => 'Video Editing',
-                    'desc'     => 'Professional video content that captivates audiences and communicates your brand message powerfully. From raw footage to polished final cuts, we handle every aspect of post-production.',
-                    'features' => ['Corporate & promotional videos','YouTube & social media optimization','Motion graphics & animations','Color grading & sound design','Explainer video production','Testimonial & case study videos'],
-                    'tags'     => ['Premiere Pro','After Effects','Color Grading','Motion'],
-                ],
-            ];
-            foreach($services as $i => $svc): ?>
-            <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo ($i % 3) * 100; ?>">
-                <div class="service-page-card">
-                    <div class="service-page-icon"><i class="bi <?php echo $svc['icon']; ?>"></i></div>
-                    <h3 class="service-page-title"><?php echo $svc['title']; ?></h3>
-                    <p class="service-page-desc"><?php echo $svc['desc']; ?></p>
-                    <ul class="service-page-features mb-3">
-                        <?php foreach($svc['features'] as $f): ?>
-                        <li><i class="bi bi-check2-circle"></i><?php echo $f; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:1rem;border-top:1px solid var(--border);">
-                        <?php foreach($svc['tags'] as $tag): ?>
-                        <span style="background:rgba(14,165,164,0.08);color:var(--secondary);font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:50px;border:1px solid rgba(14,165,164,0.15);"><?php echo $tag; ?></span>
-                        <?php endforeach; ?>
+            <?php if (empty($services)): ?>
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No services added yet.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach($services as $i => $svc): ?>
+                <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo ($i % 3) * 100; ?>">
+                    <div class="service-page-card">
+                        <div class="service-page-icon"><i class="bi <?php echo h($svc['icon']); ?>"></i></div>
+                        <h3 class="service-page-title"><?php echo h($svc['title']); ?></h3>
+                        <p class="service-page-desc"><?php echo h($svc['description']); ?></p>
+                        
+                        <?php if (!empty($svc['features'])): ?>
+                        <ul class="service-page-features mb-3">
+                            <?php 
+                            $feats = explode(',', $svc['features']);
+                            foreach($feats as $f): ?>
+                            <li><i class="bi bi-check2-circle"></i><?php echo h(trim($f)); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <?php endif; ?>
+
+                        <?php if (!empty($svc['tags'])): ?>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:1rem;border-top:1px solid var(--border);">
+                            <?php 
+                            $tags = explode(',', $svc['tags']);
+                            foreach($tags as $tag): ?>
+                            <span style="background:rgba(14,165,164,0.08);color:var(--secondary);font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:50px;border:1px solid rgba(14,165,164,0.15);"><?php echo h(trim($tag)); ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>

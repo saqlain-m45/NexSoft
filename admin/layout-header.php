@@ -51,6 +51,18 @@ $activePage = $activePage ?? '';
             </a>
 
             <div class="sidebar-section-label" style="margin-top:1rem;">Site</div>
+            <a href="<?php echo adminUrl('settings.php'); ?>" class="sidebar-link <?php echo $activePage==='settings'?'active':''; ?>">
+                <i class="bi bi-gear-fill"></i> Site Settings
+            </a>
+            <a href="<?php echo adminUrl('services.php'); ?>" class="sidebar-link <?php echo $activePage==='services'?'active':''; ?>">
+                <i class="bi bi-cpu"></i> Manage Services
+            </a>
+            <a href="<?php echo adminUrl('testimonials.php'); ?>" class="sidebar-link <?php echo $activePage==='testimonials'?'active':''; ?>">
+                <i class="bi bi-chat-quote-fill"></i> Testimonials
+            </a>
+            <a href="<?php echo adminUrl('profile.php'); ?>" class="sidebar-link <?php echo $activePage==='profile'?'active':''; ?>">
+                <i class="bi bi-person-badge"></i> My Account
+            </a>
             <a href="/NexSoft/" target="_blank" class="sidebar-link">
                 <i class="bi bi-box-arrow-up-right"></i> View Website
             </a>

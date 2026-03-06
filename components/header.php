@@ -6,8 +6,9 @@ $currentRoute = $_GET['route'] ?? 'home';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo $metaDescription ?? 'NexSoft Hub — Premium Software Consulting Agency delivering world-class Web, App, and Digital Solutions.'; ?>">
-    <title><?php echo $pageTitle ?? 'NexSoft Hub — Premium Software Consulting Agency'; ?></title>
+    <meta name="description" content="<?php echo getSetting('meta_description', 'NexSoft Hub — Premium Software Consulting Agency delivering world-class Web, App, and Digital Solutions.'); ?>">
+    <meta name="keywords" content="<?php echo getSetting('meta_keywords', 'software development, web design, app development'); ?>">
+    <title><?php echo getSetting('meta_title', 'NexSoft Hub — Premium Software Consulting Agency'); ?></title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,6 +18,20 @@ $currentRoute = $_GET['route'] ?? 'home';
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="<?php echo baseUrl('assets/css/style.css'); ?>" rel="stylesheet">
+
+    <!-- Google Analytics -->
+    <?php if ($gaId = getSetting('google_analytics_id')): ?>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo htmlspecialchars($gaId); ?>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '<?php echo htmlspecialchars($gaId); ?>');
+    </script>
+    <?php endif; ?>
+
+    <!-- Custom Head Scripts -->
+    <?php echo getSetting('custom_head_scripts'); ?>
 </head>
 <body>
 
@@ -26,7 +41,7 @@ $currentRoute = $_GET['route'] ?? 'home';
         <!-- Brand -->
         <a class="navbar-brand" href="<?php echo baseUrl(); ?>">
             <span class="brand-icon"><i class="bi bi-hexagon-fill"></i></span>
-            <span class="brand-text">NexSoft <span class="brand-accent">Hub</span></span>
+            <span class="brand-text"><?php echo getSetting('site_name', 'NexSoft'); ?> <span class="brand-accent">Hub</span></span>
         </a>
 
         <!-- Mobile Toggle -->

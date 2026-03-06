@@ -13,6 +13,12 @@ class HomeController {
         $stmt = $db->query("SELECT id, title, slug, excerpt, featured_image, author, created_at FROM blog_posts ORDER BY created_at DESC LIMIT 3");
         $blogs = $stmt->fetchAll();
 
+        // Fetch all services
+        $services = $db->query("SELECT * FROM services ORDER BY order_no ASC")->fetchAll();
+
+        // Fetch all testimonials
+        $testimonials = $db->query("SELECT * FROM testimonials ORDER BY created_at DESC")->fetchAll();
+
         $pageTitle = 'NexSoft Hub — Premium Software Consulting Agency';
         $metaDescription = 'NexSoft Hub delivers world-class web development, app development, UI/UX design, and digital solutions for businesses worldwide.';
 

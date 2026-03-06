@@ -4,10 +4,12 @@ adminCheck();
 
 $db = getDB();
 
-$projectCount     = (int)$db->query("SELECT COUNT(*) FROM projects")->fetchColumn();
-$blogCount        = (int)$db->query("SELECT COUNT(*) FROM blog_posts")->fetchColumn();
-$registrationCount = (int)$db->query("SELECT COUNT(*) FROM registrations")->fetchColumn();
-$messageCount     = (int)$db->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
+$projectCount      = (int)$db->query("SELECT COUNT(*) FROM projects")->fetchColumn();
+$blogCount         = (int)$db->query("SELECT COUNT(*) FROM blog_posts")->fetchColumn();
+$registrationCount  = (int)$db->query("SELECT COUNT(*) FROM registrations")->fetchColumn();
+$messageCount       = (int)$db->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
+$serviceCount       = (int)$db->query("SELECT COUNT(*) FROM services")->fetchColumn();
+$testimonialCount   = (int)$db->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
 
 $recentMessages = $db->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll();
 $recentRegs     = $db->query("SELECT * FROM registrations ORDER BY created_at DESC LIMIT 5")->fetchAll();
@@ -25,6 +27,8 @@ require_once __DIR__ . '/layout-header.php';
         ['icon'=>'bi-journal-richtext','count'=>$blogCount,'label'=>'Blog Posts','class'=>'teal','link'=>'blogs.php'],
         ['icon'=>'bi-people-fill','count'=>$registrationCount,'label'=>'Registrations','class'=>'green','link'=>'registrations.php'],
         ['icon'=>'bi-chat-left-text-fill','count'=>$messageCount,'label'=>'Messages','class'=>'orange','link'=>'messages.php'],
+        ['icon'=>'bi-cpu','count'=>$serviceCount,'label'=>'Services','class'=>'cyan','link'=>'services.php'],
+        ['icon'=>'bi-chat-quote','count'=>$testimonialCount,'label'=>'Testimonials','class'=>'yellow','link'=>'testimonials.php'],
     ];
     foreach($stats as $s): ?>
     <div class="col-6 col-lg-3">

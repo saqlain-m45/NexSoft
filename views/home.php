@@ -82,25 +82,22 @@
             </div>
         </div>
         <div class="row g-4">
-            <?php
-            $services = [
-                ['icon'=>'bi-globe2',         'title'=>'Web Development',    'desc'=>'Blazing-fast, scalable websites and web apps built with modern frameworks. From landing pages to enterprise portals.'],
-                ['icon'=>'bi-phone',           'title'=>'App Development',    'desc'=>'Native and cross-platform mobile apps for iOS & Android with exceptional UX and performance using Flutter & React Native.'],
-                ['icon'=>'bi-wordpress',       'title'=>'WordPress Dev',      'desc'=>'Custom WordPress themes, plugins, and e-commerce solutions via WooCommerce. Fully optimized and scalable.'],
-                ['icon'=>'bi-palette2',        'title'=>'UI/UX & Design',     'desc'=>'Award-winning interface design that combines beauty and usability. Wireframes, prototypes, and design systems.'],
-                ['icon'=>'bi-pen',             'title'=>'Content Writing',    'desc'=>'SEO-optimized, engaging content that resonates with your audience. Blog posts, copy, social media, and more.'],
-                ['icon'=>'bi-camera-video',    'title'=>'Video Editing',      'desc'=>'Professional video production and editing for social media, ads, explainer videos, and corporate content.'],
-            ];
-            foreach($services as $i => $svc): ?>
-            <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo $i * 80; ?>">
-                <div class="service-card">
-                    <div class="service-icon"><i class="bi <?php echo $svc['icon']; ?>"></i></div>
-                    <h3 class="service-title"><?php echo $svc['title']; ?></h3>
-                    <p class="service-desc"><?php echo $svc['desc']; ?></p>
-                    <div class="service-arrow"><i class="bi bi-arrow-right"></i></div>
+            <?php if (empty($services)): ?>
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No services added yet.</p>
                 </div>
-            </div>
-            <?php endforeach; ?>
+            <?php else: ?>
+                <?php foreach($services as $i => $svc): ?>
+                <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo $i * 80; ?>">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="bi <?php echo h($svc['icon']); ?>"></i></div>
+                        <h3 class="service-title"><?php echo h($svc['title']); ?></h3>
+                        <p class="service-desc"><?php echo h($svc['description']); ?></p>
+                        <div class="service-arrow"><i class="bi bi-arrow-right"></i></div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <div class="text-center mt-5 reveal">
             <a href="<?php echo baseUrl('?route=services'); ?>" class="btn-hero-primary" style="display:inline-flex;">
@@ -247,32 +244,36 @@
             </div>
         </div>
         <div class="row g-4">
-            <?php
-            $testimonials = [
-                ['name'=>'Sarah Chen','role'=>'CEO, TechVenture Inc.','init'=>'SC','quote'=>'NexSoft Hub completely transformed our online presence. They delivered a world-class e-commerce platform in just 8 weeks. Our revenue increased by 340% in the first 6 months.','rating'=>5],
-                ['name'=>'Marcus Johnson','role'=>'Founder, MediCare App','init'=>'MJ','quote'=>'The mobile app they built for us has over 50,000 active users and a 4.9-star rating on both stores. Their attention to UX detail is unmatched in the industry.','rating'=>5],
-                ['name'=>'Aisha Patel','role'=>'Marketing Director, GrowthLab','init'=>'AP','quote'=>'Their content writing and SEO team helped us rank #1 for 15 competitive keywords within 4 months. The ROI has been phenomenal. Highly recommend!','rating'=>5],
-                ['name'=>'David Park','role'=>'CTO, FinEdge Solutions','init'=>'DP','quote'=>'We have worked with many agencies before, but NexSoft Hub is in a different league. Transparent communication, clean code, and they always deliver on time.','rating'=>5],
-                ['name'=>'Emma Rodriguez','role'=>'E-commerce Manager, StyleHub','init'=>'ER','quote'=>'Our WordPress WooCommerce store handles 10,000+ daily transactions flawlessly. The custom theme they built is both stunning and lightning fast.','rating'=>5],
-                ['name'=>'James Liu','role'=>'Owner, FreshEats Restaurant','init'=>'JL','quote'=>'The restaurant management system saved us 20 hours per week and cut order errors by 95%. Best investment we have made for our business.','rating'=>5],
-            ];
-            foreach($testimonials as $i => $t): ?>
-            <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo ($i % 3) * 100; ?>">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <?php for($s=0;$s<$t['rating'];$s++): ?><i class="bi bi-star-fill"></i><?php endfor; ?>
-                    </div>
-                    <p class="testimonial-quote"><?php echo $t['quote']; ?></p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar"><?php echo $t['init']; ?></div>
-                        <div>
-                            <div class="testimonial-name"><?php echo $t['name']; ?></div>
-                            <div class="testimonial-role"><?php echo $t['role']; ?></div>
+            <?php if (empty($testimonials)): ?>
+                <div class="col-12 text-center py-5">
+                    <p style="color:rgba(255,255,255,0.4);">No testimonials yet.</p>
+                </div>
+            <?php else: ?>
+                <?php foreach($testimonials as $i => $t): ?>
+                <div class="col-md-6 col-lg-4 reveal" data-delay="<?php echo ($i % 3) * 100; ?>">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">
+                            <?php for($s=0;$s<$t['rating'];$s++): ?><i class="bi bi-star-fill"></i><?php endfor; ?>
+                        </div>
+                        <p class="testimonial-quote"><?php echo h($t['feedback']); ?></p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">
+                                <?php 
+                                    $initials = '';
+                                    $parts = explode(' ', $t['client_name']);
+                                    foreach($parts as $p) $initials .= strtoupper(substr($p, 0, 1));
+                                    echo h(substr($initials, 0, 2));
+                                ?>
+                            </div>
+                            <div>
+                                <div class="testimonial-name"><?php echo h($t['client_name']); ?></div>
+                                <div class="testimonial-role"><?php echo h($t['designation']); ?></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>
