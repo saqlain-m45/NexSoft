@@ -96,11 +96,9 @@ if (session_status() === PHP_SESSION_NONE) {
 if (getSetting('maintenance_mode', '0') === '1') {
     // Allow admins to skip maintenance mode
     if (!isset($_SESSION['admin_id'])) {
-        die('
-        <div style="font-family:sans-serif;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#0B1F3B;color:#fff;text-align:center;padding:20px;">
-            <h1 style="font-size:3rem;margin-bottom:1rem;color:#0EA5A4;">Under Maintenance</h1>
-            <p style="font-size:1.2rem;max-width:600px;opacity:0.8;">We are currently performing some scheduled updates to improve your experience. We\'ll be back online shortly!</p>
-            <div style="margin-top:2rem;width:50px;height:5px;background:#0EA5A4;"></div>
-        </div>');
+        http_response_code(503);
+        header('Retry-After: 3600');
+        require ROOT_PATH . '/views/maintenance.php';
+        exit;
     }
 }
