@@ -9,7 +9,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-function ensureUsersRoleSchema(PDO $db): void {
+function ensureUsersRoleSchema(PDO $db): void
+{
     static $checked = false;
     if ($checked) {
         return;
@@ -18,20 +19,23 @@ function ensureUsersRoleSchema(PDO $db): void {
     // Keep existing installations compatible by adding role support lazily.
     try {
         $db->exec("ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'viewer' AFTER password");
-    } catch (PDOException $e) {
-        // Column likely already exists.
+    }
+    catch (PDOException $e) {
+    // Column likely already exists.
     }
 
     try {
         $db->exec("UPDATE users SET role = 'super_admin' WHERE username = 'admin' AND (role IS NULL OR role = '' OR role = 'viewer')");
-    } catch (PDOException $e) {
-        // Best-effort only.
+    }
+    catch (PDOException $e) {
+    // Best-effort only.
     }
 
     $checked = true;
 }
 
-function adminRoleConfig(): array {
+function adminRoleConfig(): array
+{
     return [
         'super_admin' => [
             'label' => 'Super Admin',
@@ -47,7 +51,7 @@ function adminRoleConfig(): array {
         ],
         'crm_manager' => [
             'label' => 'CRM Manager',
-            'permissions' => ['dashboard', 'registrations', 'messages'],
+            'permissions' => ['dashboard', 'registrations', 'messages', 'courses'],
         ],
         'settings_manager' => [
             'label' => 'Settings Manager',
@@ -60,12 +64,14 @@ function adminRoleConfig(): array {
     ];
 }
 
-function normalizeAdminRole(?string $role): string {
+function normalizeAdminRole(?string $role): string
+{
     $role = strtolower(trim((string)$role));
     return array_key_exists($role, adminRoleConfig()) ? $role : 'viewer';
 }
 
-function ensureAuditLogSchema(PDO $db): void {
+function ensureAuditLogSchema(PDO $db): void
+{
     static $checked = false;
     if ($checked) {
         return;
@@ -87,7 +93,8 @@ function ensureAuditLogSchema(PDO $db): void {
     $checked = true;
 }
 
-function adminLogAction(string $action, string $details = ''): void {
+function adminLogAction(string $action, string $details = ''): void
+{
     try {
         $db = getDB();
         ensureAuditLogSchema($db);
@@ -99,29 +106,34 @@ function adminLogAction(string $action, string $details = ''): void {
             $details,
             (string)($_SERVER['REMOTE_ADDR'] ?? ''),
         ]);
-    } catch (Throwable $e) {
-        // Do not break admin UX if audit logging fails.
+    }
+    catch (Throwable $e) {
+    // Do not break admin UX if audit logging fails.
     }
 }
 
-function adminCsrfToken(): string {
+function adminCsrfToken(): string
+{
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
     return (string)$_SESSION['csrf_token'];
 }
 
-function adminCsrfField(): string {
+function adminCsrfField(): string
+{
     return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(adminCsrfToken(), ENT_QUOTES, 'UTF-8') . '">';
 }
 
-function adminValidateCsrfFromRequest(): bool {
+function adminValidateCsrfFromRequest(): bool
+{
     $token = (string)($_POST['csrf_token'] ?? '');
     $sessionToken = (string)($_SESSION['csrf_token'] ?? '');
     return $token !== '' && $sessionToken !== '' && hash_equals($sessionToken, $token);
 }
 
-function adminEnforceCsrfForPost(): void {
+function adminEnforceCsrfForPost(): void
+{
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
         return;
     }
@@ -136,16 +148,19 @@ function adminEnforceCsrfForPost(): void {
     }
 }
 
-function adminIsStrongPassword(string $password): bool {
+function adminIsStrongPassword(string $password): bool
+{
     // 8+ chars, upper, lower, number and special char.
     return (bool)preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/', $password);
 }
 
-function adminStrongPasswordHint(): string {
+function adminStrongPasswordHint(): string
+{
     return 'Use at least 8 characters with uppercase, lowercase, number, and symbol.';
 }
 
-function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $prefix, int $maxWidth = 1600, int $jpegQuality = 82): string {
+function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $prefix, int $maxWidth = 1600, int $jpegQuality = 82): string
+{
     $imgInfo = @getimagesize($tmpPath);
     if (!$imgInfo || empty($imgInfo['mime'])) {
         throw new RuntimeException('Invalid image file.');
@@ -154,10 +169,10 @@ function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $pre
     $mime = strtolower($imgInfo['mime']);
     $extMap = [
         'image/jpeg' => 'jpg',
-        'image/jpg'  => 'jpg',
-        'image/png'  => 'png',
+        'image/jpg' => 'jpg',
+        'image/png' => 'png',
         'image/webp' => 'webp',
-        'image/gif'  => 'gif',
+        'image/gif' => 'gif',
     ];
 
     if (!isset($extMap[$mime])) {
@@ -182,12 +197,12 @@ function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $pre
     $height = (int)$imgInfo[1];
 
     $source = match ($mime) {
-        'image/jpeg', 'image/jpg' => @imagecreatefromjpeg($tmpPath),
-        'image/png' => @imagecreatefrompng($tmpPath),
-        'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($tmpPath) : false,
-        'image/gif' => @imagecreatefromgif($tmpPath),
-        default => false,
-    };
+            'image/jpeg', 'image/jpg' => @imagecreatefromjpeg($tmpPath),
+            'image/png' => @imagecreatefrompng($tmpPath),
+            'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($tmpPath) : false,
+            'image/gif' => @imagecreatefromgif($tmpPath),
+            default => false,
+        };
 
     if (!$source) {
         if (!move_uploaded_file($tmpPath, $targetPath)) {
@@ -215,12 +230,12 @@ function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $pre
     imagecopyresampled($canvas, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
     $saved = match ($mime) {
-        'image/jpeg', 'image/jpg' => imagejpeg($canvas, $targetPath, $jpegQuality),
-        'image/png' => imagepng($canvas, $targetPath, 6),
-        'image/gif' => imagegif($canvas, $targetPath),
-        'image/webp' => function_exists('imagewebp') ? imagewebp($canvas, $targetPath, $jpegQuality) : imagepng($canvas, $targetPath, 6),
-        default => false,
-    };
+            'image/jpeg', 'image/jpg' => imagejpeg($canvas, $targetPath, $jpegQuality),
+            'image/png' => imagepng($canvas, $targetPath, 6),
+            'image/gif' => imagegif($canvas, $targetPath),
+            'image/webp' => function_exists('imagewebp') ? imagewebp($canvas, $targetPath, $jpegQuality) : imagepng($canvas, $targetPath, 6),
+            default => false,
+        };
 
     imagedestroy($source);
     imagedestroy($canvas);
@@ -232,7 +247,8 @@ function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $pre
     return $filename;
 }
 
-function adminCheck(): void {
+function adminCheck(): void
+{
     if (!isset($_SESSION['admin_id'])) {
         header('Location: /NexSoft/admin/login.php');
         exit;
@@ -250,50 +266,33 @@ function adminCheck(): void {
     adminEnforceCsrfForPost();
 }
 
-function adminLogin(string $username, string $password): bool {
-    $db = getDB();
-    ensureUsersRoleSchema($db);
-
-    $stmt = $db->prepare("SELECT id, username, password, role FROM users WHERE username = ? LIMIT 1");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['admin_id']   = $user['id'];
-        $_SESSION['admin_user'] = $user['username'];
-        $_SESSION['admin_role'] = normalizeAdminRole($user['role'] ?? 'viewer');
-        adminCsrfToken();
-        adminLogAction('auth.login', 'Successful login');
-        return true;
-    }
-
-    adminLogAction('auth.login_failed', 'Failed login attempt for username: ' . $username);
-
-    return false;
-}
-
-function adminLogout(): void {
+function adminLogout(): void
+{
     adminLogAction('auth.logout', 'User logged out');
     session_destroy();
     header('Location: /NexSoft/admin/login.php');
     exit;
 }
 
-function adminUsername(): string {
+function adminUsername(): string
+{
     return htmlspecialchars($_SESSION['admin_user'] ?? 'Admin');
 }
 
-function adminRole(): string {
+function adminRole(): string
+{
     return normalizeAdminRole($_SESSION['admin_role'] ?? 'viewer');
 }
 
-function adminRoleLabel(): string {
+function adminRoleLabel(): string
+{
     $role = adminRole();
     $config = adminRoleConfig();
     return $config[$role]['label'] ?? 'Viewer';
 }
 
-function adminHasPermission(string $permission): bool {
+function adminHasPermission(string $permission): bool
+{
     if ($permission === 'profile') {
         return true;
     }
@@ -305,7 +304,8 @@ function adminHasPermission(string $permission): bool {
     return in_array('*', $permissions, true) || in_array($permission, $permissions, true);
 }
 
-function adminRequirePermission(string $permission): void {
+function adminRequirePermission(string $permission): void
+{
     adminCheck();
 
     if (adminHasPermission($permission)) {
@@ -323,11 +323,13 @@ function adminRequirePermission(string $permission): void {
 }
 
 // Admin base URL helper
-function adminUrl(string $page = ''): string {
+function adminUrl(string $page = ''): string
+{
     return '/NexSoft/admin/' . ltrim($page, '/');
 }
 
 // Admin asset URL
-function adminAsset(string $path): string {
+function adminAsset(string $path): string
+{
     return '/NexSoft/assets/' . ltrim($path, '/');
 }
