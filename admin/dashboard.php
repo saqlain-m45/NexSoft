@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 adminCheck();
+adminRequirePermission('dashboard');
 
 $db = getDB();
 
@@ -11,8 +12,12 @@ $messageCount       = (int)$db->query("SELECT COUNT(*) FROM contact_messages")->
 $serviceCount       = (int)$db->query("SELECT COUNT(*) FROM services")->fetchColumn();
 $testimonialCount   = (int)$db->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
 
-$recentMessages = $db->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll();
-$recentRegs     = $db->query("SELECT * FROM registrations ORDER BY created_at DESC LIMIT 5")->fetchAll();
+$recentMessages = adminHasPermission('messages')
+    ? $db->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll()
+    : [];
+$recentRegs     = adminHasPermission('registrations')
+    ? $db->query("SELECT * FROM registrations ORDER BY created_at DESC LIMIT 5")->fetchAll()
+    : [];
 
 $pageTitle  = 'Dashboard — NexSoft Hub Admin';
 $activePage = 'dashboard';
@@ -30,7 +35,12 @@ require_once __DIR__ . '/layout-header.php';
         ['icon'=>'bi-cpu','count'=>$serviceCount,'label'=>'Services','class'=>'cyan','link'=>'services.php'],
         ['icon'=>'bi-chat-quote','count'=>$testimonialCount,'label'=>'Testimonials','class'=>'yellow','link'=>'testimonials.php'],
     ];
-    foreach($stats as $s): ?>
+    foreach($stats as $s):
+        $perm = basename($s['link'], '.php');
+        if (!adminHasPermission($perm)) {
+            continue;
+        }
+    ?>
     <div class="col-6 col-lg-3">
         <a href="<?php echo adminUrl($s['link']); ?>" style="text-decoration:none;">
             <div class="stat-card">
@@ -52,10 +62,18 @@ require_once __DIR__ . '/layout-header.php';
             </div>
             <div class="admin-card-body">
                 <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                    <?php if (adminHasPermission('projects')): ?>
                     <a href="<?php echo adminUrl('projects.php?action=add'); ?>" class="btn-admin-primary"><i class="bi bi-plus-circle"></i> Add Project</a>
+                    <?php endif; ?>
+                    <?php if (adminHasPermission('blogs')): ?>
                     <a href="<?php echo adminUrl('blogs.php?action=add'); ?>" class="btn-admin-primary"><i class="bi bi-plus-circle"></i> Add Blog Post</a>
+                    <?php endif; ?>
+                    <?php if (adminHasPermission('registrations')): ?>
                     <a href="<?php echo adminUrl('registrations.php'); ?>" class="btn-admin-secondary"><i class="bi bi-people"></i> View Registrations</a>
+                    <?php endif; ?>
+                    <?php if (adminHasPermission('messages')): ?>
                     <a href="<?php echo adminUrl('messages.php'); ?>" class="btn-admin-secondary"><i class="bi bi-envelope"></i> View Messages</a>
+                    <?php endif; ?>
                     <a href="/NexSoft/" target="_blank" class="btn-admin-secondary"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
                 </div>
             </div>
@@ -65,6 +83,7 @@ require_once __DIR__ . '/layout-header.php';
 
 <!-- Recent Data Tables -->
 <div class="row g-4">
+    <?php if (adminHasPermission('messages')): ?>
     <!-- Recent Messages -->
     <div class="col-lg-6">
         <div class="admin-card">
@@ -92,7 +111,9 @@ require_once __DIR__ . '/layout-header.php';
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
+    <?php if (adminHasPermission('registrations')): ?>
     <!-- Recent Registrations -->
     <div class="col-lg-6">
         <div class="admin-card">
@@ -120,6 +141,7 @@ require_once __DIR__ . '/layout-header.php';
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>
 
 <?php require_once __DIR__ . '/layout-footer.php'; ?>

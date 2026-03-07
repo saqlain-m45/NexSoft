@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(100) NOT NULL,
   `email` varchar(200) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `role` varchar(50) NOT NULL DEFAULT 'viewer',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
@@ -19,8 +20,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Default admin user: username=admin, password=admin123
-INSERT INTO `users` (`username`, `email`, `password`) VALUES
-('admin', 'admin@nexsofthub.com', '$2y$10$wkOGHQLsl/u.OrgngjWkvu6knkLWC0UfVY8w.0MyWdx1QF2ukib26');
+INSERT INTO `users` (`username`, `email`, `password`, `role`) VALUES
+('admin', 'admin@nexsofthub.com', '$2y$10$wkOGHQLsl/u.OrgngjWkvu6knkLWC0UfVY8w.0MyWdx1QF2ukib26', 'super_admin');
 
 -- --------------------------------------------------------
 -- Table: projects

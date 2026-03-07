@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 adminCheck();
+adminRequirePermission('settings');
 
 $db    = getDB();
 $msg   = '';

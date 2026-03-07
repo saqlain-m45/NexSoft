@@ -2,6 +2,7 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/../config/mailer.php';
 adminCheck();
+adminRequirePermission('registrations');
 
 $db     = getDB();
 $action = $_GET['action'] ?? 'list';

@@ -20,6 +20,11 @@ try {
     $db->exec($sqlTable);
     echo "<p style='color:green;'>[SUCCESS] Table 'site_settings' created or already exists.</p>";
 
+    // 1.1 Add role support to users for role-based access
+    try { $db->exec("ALTER TABLE users ADD COLUMN role varchar(50) NOT NULL DEFAULT 'viewer' AFTER password"); } catch(PDOException $e){}
+    $db->exec("UPDATE users SET role='super_admin' WHERE username='admin' AND (role='' OR role='viewer' OR role IS NULL)");
+    echo "<p style='color:green;'>[SUCCESS] Table 'users' role access updated.</p>";
+
     // 2. Create services table
     $sqlServices = "CREATE TABLE IF NOT EXISTS `services` (
       `id` int(11) NOT NULL AUTO_INCREMENT,

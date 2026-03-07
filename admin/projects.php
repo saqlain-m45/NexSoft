@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 adminCheck();
+adminRequirePermission('projects');
 
 $db     = getDB();
 $action = $_GET['action'] ?? 'list';

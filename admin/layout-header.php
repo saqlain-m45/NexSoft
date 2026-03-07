@@ -27,39 +27,62 @@ $activePage = $activePage ?? '';
 
         <nav class="sidebar-menu">
             <div class="sidebar-section-label">Main</div>
+            <?php if (adminHasPermission('dashboard')): ?>
             <a href="<?php echo adminUrl('dashboard.php'); ?>" class="sidebar-link <?php echo $activePage==='dashboard'?'active':''; ?>">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
+            <?php endif; ?>
 
             <div class="sidebar-section-label" style="margin-top:1rem;">Content</div>
+            <?php if (adminHasPermission('projects')): ?>
             <a href="<?php echo adminUrl('projects.php'); ?>" class="sidebar-link <?php echo $activePage==='projects'?'active':''; ?>">
                 <i class="bi bi-folder-fill"></i> Projects
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('blogs')): ?>
             <a href="<?php echo adminUrl('blogs.php'); ?>" class="sidebar-link <?php echo $activePage==='blogs'?'active':''; ?>">
                 <i class="bi bi-journal-richtext"></i> Blog Posts
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('team')): ?>
             <a href="<?php echo adminUrl('team.php'); ?>" class="sidebar-link <?php echo $activePage==='team'?'active':''; ?>">
                 <i class="bi bi-people-fill"></i> Team Members
             </a>
+            <?php endif; ?>
 
             <div class="sidebar-section-label" style="margin-top:1rem;">CRM</div>
+            <?php if (adminHasPermission('registrations')): ?>
             <a href="<?php echo adminUrl('registrations.php'); ?>" class="sidebar-link <?php echo $activePage==='registrations'?'active':''; ?>">
                 <i class="bi bi-people-fill"></i> Registrations
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('messages')): ?>
             <a href="<?php echo adminUrl('messages.php'); ?>" class="sidebar-link <?php echo $activePage==='messages'?'active':''; ?>">
                 <i class="bi bi-chat-left-text-fill"></i> Messages
             </a>
+            <?php endif; ?>
 
             <div class="sidebar-section-label" style="margin-top:1rem;">Site</div>
+            <?php if (adminHasPermission('settings')): ?>
             <a href="<?php echo adminUrl('settings.php'); ?>" class="sidebar-link <?php echo $activePage==='settings'?'active':''; ?>">
                 <i class="bi bi-gear-fill"></i> Site Settings
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('services')): ?>
             <a href="<?php echo adminUrl('services.php'); ?>" class="sidebar-link <?php echo $activePage==='services'?'active':''; ?>">
                 <i class="bi bi-cpu"></i> Manage Services
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('testimonials')): ?>
             <a href="<?php echo adminUrl('testimonials.php'); ?>" class="sidebar-link <?php echo $activePage==='testimonials'?'active':''; ?>">
                 <i class="bi bi-chat-quote-fill"></i> Testimonials
             </a>
+            <?php endif; ?>
+            <?php if (adminHasPermission('manage_users')): ?>
+            <a href="<?php echo adminUrl('users.php'); ?>" class="sidebar-link <?php echo $activePage==='users'?'active':''; ?>">
+                <i class="bi bi-person-lines-fill"></i> Admin Users
+            </a>
+            <?php endif; ?>
             <a href="<?php echo adminUrl('profile.php'); ?>" class="sidebar-link <?php echo $activePage==='profile'?'active':''; ?>">
                 <i class="bi bi-person-badge"></i> My Account
             </a>
@@ -82,6 +105,7 @@ $activePage = $activePage ?? '';
                 <div class="admin-badge">
                     <i class="bi bi-shield-fill-check"></i>
                     <?php echo adminUsername(); ?>
+                    <span style="opacity:.65;">(<?php echo htmlspecialchars(adminRoleLabel()); ?>)</span>
                 </div>
                 <a href="<?php echo adminUrl('logout.php'); ?>" class="btn-logout">
                     <i class="bi bi-box-arrow-right"></i> Logout
