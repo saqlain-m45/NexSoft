@@ -66,169 +66,245 @@ require_once __DIR__ . '/layout-header.php';
 <div class="admin-alert-error mb-3"><i class="bi bi-exclamation-circle me-2"></i><?php echo htmlspecialchars($error); ?></div>
 <?php endif; ?>
 
+<style>
+    #settingsTabs {
+        border-bottom: 1px solid var(--border);
+        gap: 0.5rem;
+    }
+
+    #settingsTabs .nav-link {
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        border-radius: 10px 10px 0 0;
+        font-weight: 600;
+        padding: 0.55rem 0.95rem;
+        background: #f8fafc;
+        transition: var(--transition);
+    }
+
+    #settingsTabs .nav-link:hover {
+        color: var(--secondary);
+        border-color: rgba(14, 165, 164, 0.35);
+        background: rgba(14, 165, 164, 0.08);
+    }
+
+    #settingsTabs .nav-link.active {
+        color: #fff;
+        background: var(--secondary);
+        border-color: var(--secondary);
+        box-shadow: 0 8px 20px rgba(14, 165, 164, 0.25);
+    }
+</style>
+
 <div class="admin-card">
     <div class="admin-card-header">
         <span class="admin-card-title"><i class="bi bi-gear-fill me-2" style="color:var(--secondary);"></i>Global Site Settings</span>
     </div>
     <div class="admin-card-body">
         <form method="POST" class="admin-form">
-            <div class="row g-4">
-                <!-- General Settings -->
-                <div class="col-12">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">General Configuration</h5>
-                </div>
-                <div class="col-md-6">
-                    <label>Site Name</label>
-                    <input type="text" name="site_name" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['site_name'] ?? ''); ?>" placeholder="e.g. NexSoft Hub">
-                </div>
+            <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-general" data-bs-toggle="tab" data-bs-target="#pane-general" type="button" role="tab" aria-controls="pane-general" aria-selected="true">General</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-seo" data-bs-toggle="tab" data-bs-target="#pane-seo" type="button" role="tab" aria-controls="pane-seo" aria-selected="false">SEO</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-contact" data-bs-toggle="tab" data-bs-target="#pane-contact" type="button" role="tab" aria-controls="pane-contact" aria-selected="false">Contact</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-social" data-bs-toggle="tab" data-bs-target="#pane-social" type="button" role="tab" aria-controls="pane-social" aria-selected="false">Social</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-email" data-bs-toggle="tab" data-bs-target="#pane-email" type="button" role="tab" aria-controls="pane-email" aria-selected="false">Email (SMTP)</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-advanced" data-bs-toggle="tab" data-bs-target="#pane-advanced" type="button" role="tab" aria-controls="pane-advanced" aria-selected="false">Advanced</button>
+                </li>
+            </ul>
 
-                <!-- SEO Settings -->
-                <div class="col-12 mt-4">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">SEO & Meta Tags</h5>
-                </div>
-                <div class="col-12">
-                    <label>Meta Title (SEO Title)</label>
-                    <input type="text" name="meta_title" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['meta_title'] ?? ''); ?>" placeholder="NexSoft Hub — Software Development Agency">
-                </div>
-                <div class="col-12">
-                    <label>Meta Description</label>
-                    <textarea name="meta_description" class="form-control" rows="3"><?php echo htmlspecialchars($currentSettings['meta_description'] ?? ''); ?></textarea>
-                </div>
-                <div class="col-12">
-                    <label>Meta Keywords (comma separated)</label>
-                    <input type="text" name="meta_keywords" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['meta_keywords'] ?? ''); ?>" placeholder="web, app, digital, etc.">
-                </div>
-
-                <!-- Contact Settings -->
-                <div class="col-12 mt-4">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">Contact Information</h5>
-                </div>
-                <div class="col-md-6">
-                    <label>Site Email</label>
-                    <input type="email" name="site_email" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['site_email'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label>Site Phone</label>
-                    <input type="text" name="site_phone" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['site_phone'] ?? ''); ?>">
-                </div>
-                <div class="col-12">
-                    <label>Office Address</label>
-                    <input type="text" name="site_address" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['site_address'] ?? ''); ?>">
-                </div>
-
-                <!-- Social Media -->
-                <div class="col-12 mt-4">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">Social Media Links</h5>
-                </div>
-                <div class="col-md-6">
-                    <label><i class="bi bi-facebook me-1"></i> Facebook</label>
-                    <input type="url" name="facebook_link" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['facebook_link'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label><i class="bi bi-twitter-x me-1"></i> Twitter / X</label>
-                    <input type="url" name="twitter_link" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['twitter_link'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label><i class="bi bi-linkedin me-1"></i> LinkedIn</label>
-                    <input type="url" name="linkedin_link" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['linkedin_link'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label><i class="bi bi-instagram me-1"></i> Instagram</label>
-                    <input type="url" name="instagram_link" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['instagram_link'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label><i class="bi bi-github me-1"></i> GitHub</label>
-                    <input type="url" name="github_link" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['github_link'] ?? ''); ?>">
-                </div>
-
-                <!-- SMTP Settings -->
-                <div class="col-12 mt-4">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">SMTP Email Configuration</h5>
-                </div>
-                <div class="col-md-6">
-                    <label>SMTP Host</label>
-                    <input type="text" name="smtp_host" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['smtp_host'] ?? ''); ?>" placeholder="smtp.gmail.com">
-                </div>
-                <div class="col-md-3">
-                    <label>SMTP Port</label>
-                    <input type="text" name="smtp_port" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['smtp_port'] ?? ''); ?>" placeholder="587">
-                </div>
-                <div class="col-md-3">
-                    <label>Encryption</label>
-                    <select name="smtp_encryption" class="form-control">
-                        <option value="tls" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'tls' ? 'selected' : ''; ?>>TLS</option>
-                        <option value="ssl" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'ssl' ? 'selected' : ''; ?>>SSL</option>
-                        <option value="none" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'none' ? 'selected' : ''; ?>>None</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label>SMTP Username</label>
-                    <input type="text" name="smtp_user" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['smtp_user'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6">
-                    <label>SMTP Password</label>
-                    <input type="password" name="smtp_pass" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['smtp_pass'] ?? ''); ?>">
-                </div>
-
-                <!-- Advanced Settings -->
-                <div class="col-12 mt-4">
-                    <h5 class="mb-3 border-bottom pb-2 text-primary">Advanced & Scripts</h5>
-                </div>
-                <div class="col-md-6">
-                    <label>Google Analytics ID (G-XXXXXXX)</label>
-                    <input type="text" name="google_analytics_id" class="form-control" 
-                           value="<?php echo htmlspecialchars($currentSettings['google_analytics_id'] ?? ''); ?>">
-                </div>
-                <div class="col-md-6 d-flex align-items-center pt-4">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="maintenance_mode" value="1" id="mtToggle" 
-                               <?php echo ($currentSettings['maintenance_mode'] ?? '0') == '1' ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="mtToggle">Enable Maintenance Mode</label>
+            <div class="tab-content" id="settingsTabsContent">
+                <div class="tab-pane fade show active" id="pane-general" role="tabpanel" aria-labelledby="tab-general" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">General Configuration</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Basic identity and behavior settings for your site.</p>
+                        </div>
+                        <div class="col-md-8">
+                            <label>Site Name</label>
+                            <input type="text" name="site_name" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['site_name'] ?? ''); ?>" placeholder="e.g. NexSoft Hub">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center pt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="maintenance_mode" value="1" id="mtToggle"
+                                       <?php echo ($currentSettings['maintenance_mode'] ?? '0') == '1' ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="mtToggle">Enable Maintenance Mode</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6 d-flex align-items-center pt-4">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="responsive_enabled" value="1" id="responsiveToggle" 
-                               <?php echo ($currentSettings['responsive_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="responsiveToggle">Enable Responsive Layout (Mobile/Tablet)</label>
+
+                <div class="tab-pane fade" id="pane-seo" role="tabpanel" aria-labelledby="tab-seo" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">SEO and Meta Tags</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Optimize how your website appears in search engines and previews.</p>
+                        </div>
+                        <div class="col-12">
+                            <label>Meta Title (SEO Title)</label>
+                            <input type="text" name="meta_title" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['meta_title'] ?? ''); ?>" placeholder="NexSoft Hub — Software Development Agency">
+                        </div>
+                        <div class="col-12">
+                            <label>Meta Description</label>
+                            <textarea name="meta_description" class="form-control" rows="3"><?php echo htmlspecialchars($currentSettings['meta_description'] ?? ''); ?></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label>Meta Keywords (comma separated)</label>
+                            <input type="text" name="meta_keywords" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['meta_keywords'] ?? ''); ?>" placeholder="web, app, digital, etc.">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6 d-flex align-items-center pt-4">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" name="custom_cursor_enabled" value="1" id="cursorToggle" 
-                               <?php echo ($currentSettings['custom_cursor_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="cursorToggle">Enable Custom Glowing Cursor</label>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <label>Custom Head Scripts (e.g. meta tags, tracking pixels)</label>
-                    <textarea name="custom_head_scripts" class="form-control" rows="4"><?php echo htmlspecialchars($currentSettings['custom_head_scripts'] ?? ''); ?></textarea>
-                </div>
-                <div class="col-12">
-                    <label>Custom Footer Scripts (JS before &lt;/body&gt;)</label>
-                    <textarea name="custom_footer_scripts" class="form-control" rows="4"><?php echo htmlspecialchars($currentSettings['custom_footer_scripts'] ?? ''); ?></textarea>
                 </div>
 
-                <div class="col-12 pt-3 border-top mt-4">
-                    <button type="submit" class="btn-admin-primary">
-                        <i class="bi bi-save me-1"></i> Save All Settings
-                    </button>
+                <div class="tab-pane fade" id="pane-contact" role="tabpanel" aria-labelledby="tab-contact" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">Contact Information</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Public contact details shown across website sections.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Site Email</label>
+                            <input type="email" name="site_email" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['site_email'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Site Phone</label>
+                            <input type="text" name="site_phone" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['site_phone'] ?? ''); ?>">
+                        </div>
+                        <div class="col-12">
+                            <label>Office Address</label>
+                            <input type="text" name="site_address" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['site_address'] ?? ''); ?>">
+                        </div>
+                    </div>
                 </div>
+
+                <div class="tab-pane fade" id="pane-social" role="tabpanel" aria-labelledby="tab-social" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">Social Media Links</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Add profile URLs used in footer, contact, and social icons.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label><i class="bi bi-facebook me-1"></i> Facebook</label>
+                            <input type="url" name="facebook_link" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['facebook_link'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label><i class="bi bi-twitter-x me-1"></i> Twitter / X</label>
+                            <input type="url" name="twitter_link" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['twitter_link'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label><i class="bi bi-linkedin me-1"></i> LinkedIn</label>
+                            <input type="url" name="linkedin_link" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['linkedin_link'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label><i class="bi bi-instagram me-1"></i> Instagram</label>
+                            <input type="url" name="instagram_link" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['instagram_link'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label><i class="bi bi-github me-1"></i> GitHub</label>
+                            <input type="url" name="github_link" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['github_link'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="pane-email" role="tabpanel" aria-labelledby="tab-email" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">SMTP Email Configuration</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Configure outgoing email provider for forms and notifications.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>SMTP Host</label>
+                            <input type="text" name="smtp_host" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['smtp_host'] ?? ''); ?>" placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="col-md-3">
+                            <label>SMTP Port</label>
+                            <input type="text" name="smtp_port" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['smtp_port'] ?? ''); ?>" placeholder="587">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Encryption</label>
+                            <select name="smtp_encryption" class="form-control">
+                                <option value="tls" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'tls' ? 'selected' : ''; ?>>TLS</option>
+                                <option value="ssl" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'ssl' ? 'selected' : ''; ?>>SSL</option>
+                                <option value="none" <?php echo ($currentSettings['smtp_encryption'] ?? '') === 'none' ? 'selected' : ''; ?>>None</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>SMTP Username</label>
+                            <input type="text" name="smtp_user" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['smtp_user'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>SMTP Password</label>
+                            <input type="password" name="smtp_pass" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['smtp_pass'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="pane-advanced" role="tabpanel" aria-labelledby="tab-advanced" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">Advanced and Scripts</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Tracking IDs, script injections, and feature toggles.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Google Analytics ID (G-XXXXXXX)</label>
+                            <input type="text" name="google_analytics_id" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['google_analytics_id'] ?? ''); ?>">
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center pt-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="responsive_enabled" value="1" id="responsiveToggle"
+                                       <?php echo ($currentSettings['responsive_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="responsiveToggle">Enable Responsive Layout (Mobile/Tablet)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center pt-2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="custom_cursor_enabled" value="1" id="cursorToggle"
+                                       <?php echo ($currentSettings['custom_cursor_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="cursorToggle">Enable Custom Glowing Cursor</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label>Custom Head Scripts (e.g. meta tags, tracking pixels)</label>
+                            <textarea name="custom_head_scripts" class="form-control" rows="4"><?php echo htmlspecialchars($currentSettings['custom_head_scripts'] ?? ''); ?></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label>Custom Footer Scripts (JS before &lt;/body&gt;)</label>
+                            <textarea name="custom_footer_scripts" class="form-control" rows="4"><?php echo htmlspecialchars($currentSettings['custom_footer_scripts'] ?? ''); ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-top mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <small class="text-muted">Tip: Open each tab to review all settings before saving.</small>
+                <button type="submit" class="btn-admin-primary">
+                    <i class="bi bi-save me-1"></i> Save All Settings
+                </button>
             </div>
         </form>
     </div>

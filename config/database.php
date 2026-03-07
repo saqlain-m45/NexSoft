@@ -94,8 +94,11 @@ if (session_status() === PHP_SESSION_NONE) {
  * Maintenance Mode Check
  */
 if (getSetting('maintenance_mode', '0') === '1') {
-    // Allow admins to skip maintenance mode
-    if (!isset($_SESSION['admin_id'])) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $isAdminArea = strpos($requestUri, '/admin/') !== false;
+
+    // Keep admin panel reachable while frontend stays under maintenance.
+    if (!$isAdminArea) {
         http_response_code(503);
         header('Retry-After: 3600');
         require ROOT_PATH . '/views/maintenance.php';
