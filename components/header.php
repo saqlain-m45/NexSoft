@@ -1,11 +1,13 @@
 <?php
 $currentRoute = $_GET['route'] ?? 'home';
+$responsiveEnabled = getSetting('responsive_enabled', '1') === '1';
+$viewportContent = $responsiveEnabled ? 'width=device-width, initial-scale=1.0' : 'width=1280';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="<?php echo htmlspecialchars($viewportContent); ?>">
     <meta name="description" content="<?php echo getSetting('meta_description', 'NexSoft Hub — Premium Software Consulting Agency delivering world-class Web, App, and Digital Solutions.'); ?>">
     <meta name="keywords" content="<?php echo getSetting('meta_keywords', 'software development, web design, app development'); ?>">
     <title><?php echo getSetting('meta_title', 'NexSoft Hub — Premium Software Consulting Agency'); ?></title>

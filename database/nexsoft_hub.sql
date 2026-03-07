@@ -132,6 +132,7 @@ INSERT INTO `site_settings` (`setting_key`, `setting_value`) VALUES
 ('google_analytics_id', ''),
 ('custom_head_scripts', ''),
 ('custom_footer_scripts', ''),
+('responsive_enabled', '1'),
 ('custom_cursor_enabled', '1'),
 ('maintenance_mode', '0');
 

@@ -95,12 +95,18 @@ $activePage = $activePage ?? '';
             <div style="font-size:0.75rem;color:rgba(255,255,255,0.25);">NexSoft Hub v1.0</div>
         </div>
     </aside>
+    <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop"></div>
 
     <!-- ===== MAIN ===== -->
     <div class="admin-main">
         <!-- Topbar -->
         <div class="admin-topbar">
-            <div class="admin-topbar-title"><?php echo $pageTitle ?? 'Dashboard'; ?></div>
+            <div class="admin-topbar-left">
+                <button type="button" class="admin-menu-toggle" id="adminMenuToggle" aria-label="Toggle sidebar" aria-expanded="false">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="admin-topbar-title"><?php echo $pageTitle ?? 'Dashboard'; ?></div>
+            </div>
             <div class="admin-topbar-right">
                 <div class="admin-badge">
                     <i class="bi bi-shield-fill-check"></i>

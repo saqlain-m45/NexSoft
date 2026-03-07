@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'google_analytics_id'   => $_POST['google_analytics_id'] ?? '',
         'custom_head_scripts'   => $_POST['custom_head_scripts'] ?? '',
         'custom_footer_scripts' => $_POST['custom_footer_scripts'] ?? '',
+        'responsive_enabled'    => $_POST['responsive_enabled'] ?? '0',
         'custom_cursor_enabled' => $_POST['custom_cursor_enabled'] ?? '0',
         'maintenance_mode'      => $_POST['maintenance_mode'] ?? '0'
     ];
@@ -198,6 +199,13 @@ require_once __DIR__ . '/layout-header.php';
                         <input class="form-check-input" type="checkbox" name="maintenance_mode" value="1" id="mtToggle" 
                                <?php echo ($currentSettings['maintenance_mode'] ?? '0') == '1' ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="mtToggle">Enable Maintenance Mode</label>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex align-items-center pt-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="responsive_enabled" value="1" id="responsiveToggle" 
+                               <?php echo ($currentSettings['responsive_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="responsiveToggle">Enable Responsive Layout (Mobile/Tablet)</label>
                     </div>
                 </div>
                 <div class="col-md-6 d-flex align-items-center pt-4">
