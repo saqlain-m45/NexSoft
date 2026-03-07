@@ -5,7 +5,7 @@
 <script>
     // Admin JS
     document.addEventListener('DOMContentLoaded', function () {
-        const csrfToken = <? php echo json_encode(adminCsrfToken()); ?>;
+        const csrfToken = <?php echo json_encode(adminCsrfToken()); ?>;
         document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(function (form) {
             if (form.querySelector('input[name="csrf_token"]')) {
                 return;

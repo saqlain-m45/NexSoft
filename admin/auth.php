@@ -266,6 +266,29 @@ function adminCheck(): void
     adminEnforceCsrfForPost();
 }
 
+function adminLogin(string $username, string $password): bool
+{
+    $db = getDB();
+    ensureUsersRoleSchema($db);
+
+    $stmt = $db->prepare("SELECT id, username, password, role FROM users WHERE username = ? LIMIT 1");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['admin_id'] = $user['id'];
+        $_SESSION['admin_user'] = $user['username'];
+        $_SESSION['admin_role'] = normalizeAdminRole($user['role'] ?? 'viewer');
+        adminCsrfToken();
+        adminLogAction('auth.login', 'Successful login');
+        return true;
+    }
+
+    adminLogAction('auth.login_failed', 'Failed login attempt for username: ' . $username);
+
+    return false;
+}
+
 function adminLogout(): void
 {
     adminLogAction('auth.logout', 'User logged out');
