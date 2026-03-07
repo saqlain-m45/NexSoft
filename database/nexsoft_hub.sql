@@ -170,3 +170,63 @@ CREATE TABLE IF NOT EXISTS `testimonials` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+-- Table: team_members
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `team_members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `designation` varchar(255) NOT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `sort_order` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Sample team members
+INSERT INTO `team_members` (`name`, `designation`, `bio`, `sort_order`) VALUES
+('Saqlain Muzaffar', 'CEO/Founder', 'Hey I am Founder of NexSoft Hub & a passionate developer...', 1),
+('Syed Bilal Ahmed', 'Co-Founder', 'I am a Co-Founder & Full Stack developer at NexSoft Hub.', 2),
+('M. Kashan', 'Flutter Developer', '', 3),
+('Fawad Ali Shan', 'Flutter Developer', '', 4),
+('Munim Abbas', 'Web Developer', '', 5);
+
+-- --------------------------------------------------------
+-- Table: courses
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `courses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `registration_open` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Default courses
+INSERT INTO `courses` (`title`, `category`) VALUES
+('Web Development', 'Web Development'),
+('WordPress Development', 'WordPress'),
+('SEO Optimization', 'SEO'),
+('App Development', 'App Development');
+
+-- --------------------------------------------------------
+-- Table: course_registrations
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `course_registrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'pending',
+  `is_notified` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `course_id` (`course_id`),
+  CONSTRAINT `course_registrations_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
