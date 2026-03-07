@@ -5,6 +5,18 @@
 <script>
 // Admin JS
 document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = <?php echo json_encode(adminCsrfToken()); ?>;
+    document.querySelectorAll('form[method="POST"], form[method="post"]').forEach(function(form) {
+        if (form.querySelector('input[name="csrf_token"]')) {
+            return;
+        }
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'csrf_token';
+        input.value = csrfToken;
+        form.appendChild(input);
+    });
+
     const sidebar = document.getElementById('adminSidebar');
     const menuToggle = document.getElementById('adminMenuToggle');
     const backdrop = document.getElementById('adminSidebarBackdrop');

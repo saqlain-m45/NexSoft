@@ -22,11 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['image']['name'])) {
             $allowedTypes = ['image/jpeg','image/jpg','image/png','image/gif','image/webp'];
             if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] < 5000000) {
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $imageName = uniqid('proj_') . '.' . $ext;
                 $uploadDir = __DIR__ . '/../assets/uploads/projects/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-                move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $imageName);
+                try {
+                    $imageName = adminOptimizeAndSaveImage($_FILES['image']['tmp_name'], $uploadDir, 'proj', 1700, 82);
+                } catch (Throwable $e) {
+                    $error = $e->getMessage();
+                }
             } else {
                 $error = 'Invalid image. Use JPG/PNG/GIF/WebP under 5MB.';
             }
@@ -38,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($actionPost === 'add') {
                 $stmt = $db->prepare("INSERT INTO projects (title, description, image, link) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$title, $desc, $imageName, $link]);
+                adminLogAction('projects.create', 'Created project: ' . $title);
                 $msg = 'Project added successfully!';
             } else {
                 $id = (int)($_POST['id'] ?? 0);
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $db->prepare("UPDATE projects SET title=?, description=?, link=? WHERE id=?");
                     $stmt->execute([$title, $desc, $link, $id]);
                 }
+                adminLogAction('projects.update', 'Updated project id=' . $id . ' title=' . $title);
                 $msg = 'Project updated successfully!';
             }
             $action = 'list';
@@ -62,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (file_exists($imgPath)) unlink($imgPath);
         }
         $db->prepare("DELETE FROM projects WHERE id = ?")->execute([$id]);
+        adminLogAction('projects.delete', 'Deleted project id=' . $id);
         $msg = 'Project deleted.';
     }
 }
@@ -105,6 +109,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" enctype="multipart/form-data" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action === 'edit'): ?>
             <input type="hidden" name="id" value="<?php echo $editProject['id']; ?>">
@@ -210,6 +215,7 @@ require_once __DIR__ . '/layout-header.php';
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
                             <form method="POST" style="display:inline;">
+                                <?php echo adminCsrfField(); ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
                                 <button type="submit" class="btn-action btn-delete confirm-delete">

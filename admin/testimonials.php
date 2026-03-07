@@ -23,11 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($actionPost === 'add') {
                 $stmt = $db->prepare("INSERT INTO testimonials (client_name, designation, feedback, rating) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$name, $designation, $feedback, $rating]);
+                adminLogAction('testimonials.create', 'Created testimonial: ' . $name);
                 $msg = 'Testimonial added!';
             } else {
                 $id = (int)($_POST['id'] ?? 0);
                 $stmt = $db->prepare("UPDATE testimonials SET client_name=?, designation=?, feedback=?, rating=? WHERE id=?");
                 $stmt->execute([$name, $designation, $feedback, $rating, $id]);
+                adminLogAction('testimonials.update', 'Updated testimonial id=' . $id . ' name=' . $name);
                 $msg = 'Testimonial updated!';
             }
             $action = 'list';
@@ -35,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($actionPost === 'delete') {
         $id = (int)($_POST['id'] ?? 0);
         $db->prepare("DELETE FROM testimonials WHERE id = ?")->execute([$id]);
+        adminLogAction('testimonials.delete', 'Deleted testimonial id=' . $id);
         $msg = 'Deleted successfully.';
     }
 }
@@ -67,6 +70,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action==='edit'): ?>
             <input type="hidden" name="id" value="<?php echo $editT['id']; ?>">
@@ -117,6 +121,7 @@ require_once __DIR__ . '/layout-header.php';
                     <td>
                         <a href="testimonials.php?action=edit&id=<?php echo $t['id']; ?>" class="btn-action btn-edit">Edit</a>
                         <form method="POST" style="display:inline;">
+                            <?php echo adminCsrfField(); ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
                             <button type="submit" class="btn-action btn-delete confirm-delete">Delete</button>

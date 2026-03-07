@@ -25,11 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($actionPost === 'add') {
                 $stmt = $db->prepare("INSERT INTO services (title, description, features, tags, icon, order_no) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $description, $features, $tags, $icon, $order_no]);
+                adminLogAction('services.create', 'Created service: ' . $title);
                 $msg = 'Service added successfully!';
             } else {
                 $id = (int)($_POST['id'] ?? 0);
                 $stmt = $db->prepare("UPDATE services SET title=?, description=?, features=?, tags=?, icon=?, order_no=? WHERE id=?");
                 $stmt->execute([$title, $description, $features, $tags, $icon, $order_no, $id]);
+                adminLogAction('services.update', 'Updated service id=' . $id . ' title=' . $title);
                 $msg = 'Service updated successfully!';
             }
             $action = 'list';
@@ -37,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($actionPost === 'delete') {
         $id = (int)($_POST['id'] ?? 0);
         $db->prepare("DELETE FROM services WHERE id = ?")->execute([$id]);
+        adminLogAction('services.delete', 'Deleted service id=' . $id);
         $msg = 'Service deleted successfully.';
     }
 }
@@ -72,6 +75,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action==='edit'): ?>
             <input type="hidden" name="id" value="<?php echo $editService['id']; ?>">
@@ -122,6 +126,7 @@ require_once __DIR__ . '/layout-header.php';
                     <td>
                         <a href="services.php?action=edit&id=<?php echo $s['id']; ?>" class="btn-action btn-edit">Edit</a>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this service?');">
+                            <?php echo adminCsrfField(); ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?php echo $s['id']; ?>">
                             <button type="submit" class="btn-action btn-delete">Delete</button>

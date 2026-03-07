@@ -9,6 +9,16 @@ $error = '';
 
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $group = trim((string)($_POST['settings_group'] ?? 'all'));
+    $groupMap = [
+        'general' => ['site_name', 'maintenance_mode'],
+        'seo' => ['meta_title', 'meta_description', 'meta_keywords'],
+        'contact' => ['site_email', 'site_phone', 'site_address'],
+        'social' => ['facebook_link', 'twitter_link', 'linkedin_link', 'instagram_link', 'github_link'],
+        'email' => ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_encryption'],
+        'advanced' => ['google_analytics_id', 'custom_head_scripts', 'custom_footer_scripts', 'responsive_enabled', 'custom_cursor_enabled'],
+    ];
+
     $settings = [
         'site_name'             => $_POST['site_name'] ?? '',
         'meta_title'            => $_POST['meta_title'] ?? '',
@@ -35,15 +45,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'maintenance_mode'      => $_POST['maintenance_mode'] ?? '0'
     ];
 
+    $settingsToSave = $settings;
+    if ($group !== 'all' && isset($groupMap[$group])) {
+        $settingsToSave = [];
+        foreach ($groupMap[$group] as $key) {
+            if (array_key_exists($key, $settings)) {
+                $settingsToSave[$key] = $settings[$key];
+            }
+        }
+    }
+
     try {
         $db->beginTransaction();
         $stmt = $db->prepare("INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?) 
                               ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
-        foreach ($settings as $key => $value) {
+        foreach ($settingsToSave as $key => $value) {
             $stmt->execute([$key, $value]);
         }
         $db->commit();
-        $msg = 'Site settings updated successfully!';
+        $groupLabel = ucfirst($group === 'all' ? 'all settings' : $group . ' settings');
+        $msg = $groupLabel . ' updated successfully!';
+        adminLogAction('settings.update', 'Updated group: ' . $group);
     } catch (Exception $e) {
         $db->rollBack();
         $error = 'Failed to update settings: ' . $e->getMessage();
@@ -102,6 +124,8 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" class="admin-form">
+            <?php echo adminCsrfField(); ?>
+            <input type="hidden" name="settings_group" id="settingsGroupInput" value="all">
             <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="tab-general" data-bs-toggle="tab" data-bs-target="#pane-general" type="button" role="tab" aria-controls="pane-general" aria-selected="true">General</button>
@@ -302,12 +326,38 @@ require_once __DIR__ . '/layout-header.php';
 
             <div class="pt-3 border-top mt-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <small class="text-muted">Tip: Open each tab to review all settings before saving.</small>
-                <button type="submit" class="btn-admin-primary">
+                <button type="submit" class="btn-admin-primary" id="settingsSaveBtn">
                     <i class="bi bi-save me-1"></i> Save All Settings
                 </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const groupInput = document.getElementById('settingsGroupInput');
+    const saveBtn = document.getElementById('settingsSaveBtn');
+    const tabs = document.querySelectorAll('#settingsTabs [data-bs-toggle="tab"]');
+
+    function keyFromTabBtn(btn) {
+        const id = btn.getAttribute('id') || '';
+        return id.replace('tab-', '') || 'all';
+    }
+
+    function syncFromActiveTab() {
+        const active = document.querySelector('#settingsTabs .nav-link.active');
+        const group = active ? keyFromTabBtn(active) : 'all';
+        if (groupInput) groupInput.value = group;
+        if (saveBtn) saveBtn.innerHTML = '<i class="bi bi-save me-1"></i> Save ' + (group === 'all' ? 'All Settings' : group.charAt(0).toUpperCase() + group.slice(1) + ' Settings');
+    }
+
+    tabs.forEach(function (btn) {
+        btn.addEventListener('shown.bs.tab', syncFromActiveTab);
+    });
+
+    syncFromActiveTab();
+});
+</script>
 
 <?php require_once __DIR__ . '/layout-footer.php'; ?>

@@ -34,11 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['photo']['name'])) {
             $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             if (in_array($_FILES['photo']['type'], $allowed) && $_FILES['photo']['size'] < 5000000) {
-                $ext       = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-                $photoName = uniqid('team_') . '.' . $ext;
                 $uploadDir = __DIR__ . '/../assets/uploads/team/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-                move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . $photoName);
+                try {
+                    $photoName = adminOptimizeAndSaveImage($_FILES['photo']['tmp_name'], $uploadDir, 'team', 1200, 84);
+                } catch (Throwable $e) {
+                    $error = $e->getMessage();
+                }
             } else {
                 $error = 'Invalid image. Use JPG/PNG/WebP under 5 MB.';
             }
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "INSERT INTO team_members (name, designation, bio, photo, sort_order) VALUES (?, ?, ?, ?, ?)"
                 );
                 $stmt->execute([$name, $designation, $bio, $photoName, $sortOrder]);
+                adminLogAction('team.create', 'Added team member: ' . $name);
                 $msg = 'Team member added successfully!';
             } else {
                 $id = (int)($_POST['id'] ?? 0);
@@ -74,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
                     $stmt->execute([$name, $designation, $bio, $sortOrder, $id]);
                 }
+                adminLogAction('team.update', 'Updated team member id=' . $id . ' name=' . $name);
                 $msg = 'Team member updated!';
             }
             $action = 'list';
@@ -89,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (file_exists($p)) unlink($p);
         }
         $db->prepare("DELETE FROM team_members WHERE id = ?")->execute([$id]);
+        adminLogAction('team.delete', 'Deleted team member id=' . $id);
         $msg = 'Team member deleted.';
     }
 }
@@ -133,6 +137,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" enctype="multipart/form-data" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action === 'edit'): ?>
             <input type="hidden" name="id" value="<?php echo $editMember['id']; ?>">
@@ -244,6 +249,7 @@ require_once __DIR__ . '/layout-header.php';
                             <a href="<?php echo adminUrl('team.php?action=edit&id=' . $m['id']); ?>"
                                class="btn-action btn-edit"><i class="bi bi-pencil"></i> Edit</a>
                             <form method="POST" style="display:inline;">
+                                <?php echo adminCsrfField(); ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo $m['id']; ?>">
                                 <button type="submit" class="btn-action btn-delete confirm-delete">

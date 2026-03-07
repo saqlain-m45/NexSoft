@@ -19,10 +19,52 @@ $recentRegs     = adminHasPermission('registrations')
     ? $db->query("SELECT * FROM registrations ORDER BY created_at DESC LIMIT 5")->fetchAll()
     : [];
 
+$alerts = [];
+if (getSetting('maintenance_mode', '0') === '1') {
+    $alerts[] = ['type' => 'warning', 'text' => 'Maintenance mode is enabled. Frontend visitors currently see the maintenance page.'];
+}
+if (adminHasPermission('registrations') && $registrationCount > 0) {
+    $pendingRegistrations = (int)$db->query("SELECT COUNT(*) FROM registrations WHERE status='pending'")->fetchColumn();
+    if ($pendingRegistrations > 0) {
+        $alerts[] = ['type' => 'info', 'text' => $pendingRegistrations . ' registration(s) are pending review.'];
+    }
+}
+if (adminHasPermission('settings')) {
+    $smtpHost = trim((string)getSetting('smtp_host', ''));
+    $smtpUser = trim((string)getSetting('smtp_user', ''));
+    $smtpPass = trim((string)getSetting('smtp_pass', ''));
+    if ($smtpHost === '' || $smtpUser === '' || $smtpPass === '') {
+        $alerts[] = ['type' => 'danger', 'text' => 'SMTP is incomplete. Email notifications may fail until SMTP host/user/password are configured.'];
+    }
+}
+
 $pageTitle  = 'Dashboard — NexSoft Hub Admin';
 $activePage = 'dashboard';
 require_once __DIR__ . '/layout-header.php';
 ?>
+
+<?php if (!empty($alerts)): ?>
+<div class="admin-card mb-4" style="border-left:4px solid var(--secondary);">
+    <div class="admin-card-header">
+        <span class="admin-card-title"><i class="bi bi-bell-fill me-2" style="color:var(--secondary);"></i>System Alerts</span>
+    </div>
+    <div class="admin-card-body">
+        <div class="d-flex flex-column gap-2">
+            <?php foreach ($alerts as $alert): ?>
+                <?php
+                $bg = 'rgba(14,165,164,.1)';
+                $color = '#0f766e';
+                if ($alert['type'] === 'warning') { $bg = 'rgba(245,158,11,.14)'; $color = '#b45309'; }
+                if ($alert['type'] === 'danger') { $bg = 'rgba(239,68,68,.12)'; $color = '#b91c1c'; }
+                ?>
+            <div style="background:<?php echo $bg; ?>;color:<?php echo $color; ?>;padding:10px 12px;border-radius:10px;font-size:.88rem;font-weight:600;">
+                <?php echo htmlspecialchars($alert['text']); ?>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <!-- Stat Cards -->
 <div class="row g-4 mb-4">

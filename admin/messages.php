@@ -9,6 +9,7 @@ $msg = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $id = (int)($_POST['id'] ?? 0);
     $db->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$id]);
+    adminLogAction('messages.delete', 'Deleted contact message id=' . $id);
     $msg = 'Message deleted.';
 }
 
@@ -69,6 +70,7 @@ require_once __DIR__ . '/layout-header.php';
                     <td><span class="badge-orange"><?php echo date('M d, Y', strtotime($msg_row['created_at'])); ?></span></td>
                     <td>
                         <form method="POST" style="display:inline;">
+                            <?php echo adminCsrfField(); ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?php echo $msg_row['id']; ?>">
                             <button type="submit" class="btn-action btn-delete confirm-delete">

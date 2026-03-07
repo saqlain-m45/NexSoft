@@ -13,9 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if (!empty($newPass)) {
+            if (!adminIsStrongPassword($newPass)) {
+                throw new RuntimeException(adminStrongPasswordHint());
+            }
             $hashed = password_hash($newPass, PASSWORD_DEFAULT);
             $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
             $stmt->execute([$hashed, $currUser]);
+            adminLogAction('profile.password_update', 'Updated password for current user');
             $msg = 'Password updated successfully!';
         }
         
@@ -41,6 +45,7 @@ require_once __DIR__ . '/layout-header.php';
         <?php if ($error): ?><div class="admin-alert-error mb-3"><?php echo $error; ?></div><?php endif; ?>
 
         <form method="POST" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <div class="mb-3">
                 <label>Username</label>
                 <input type="text" class="form-control" value="<?php echo adminUsername(); ?>" disabled>
@@ -48,6 +53,7 @@ require_once __DIR__ . '/layout-header.php';
             <div class="mb-4">
                 <label>New Password (Leave blank to keep current)</label>
                 <input type="password" name="password" class="form-control" autocomplete="new-password">
+                <small style="color:var(--text-muted);display:block;margin-top:6px;"><?php echo htmlspecialchars(adminStrongPasswordHint()); ?></small>
             </div>
             <button type="submit" class="btn-admin-primary">Update Profile</button>
         </form>

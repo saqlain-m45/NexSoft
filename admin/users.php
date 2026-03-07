@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Username and email are required.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Please enter a valid email address.';
-        } elseif ($actionPost === 'add' && strlen($password) < 8) {
-            $error = 'Password must be at least 8 characters for new users.';
+        } elseif ($actionPost === 'add' && !adminIsStrongPassword($password)) {
+            $error = adminStrongPasswordHint();
         }
 
         if ($error === '') {
@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $hash = password_hash($password, PASSWORD_DEFAULT);
                         $stmt = $db->prepare('INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)');
                         $stmt->execute([$username, $email, $hash, $role]);
+                        adminLogAction('users.create', 'Created user: ' . $username . ' role=' . $role);
                         $msg = 'User created successfully.';
                         $action = 'list';
                     }
@@ -59,18 +60,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $error = 'Another user already uses that username or email.';
                     } else {
                         if ($password !== '') {
-                            if (strlen($password) < 8) {
-                                $error = 'Password must be at least 8 characters.';
+                            if (!adminIsStrongPassword($password)) {
+                                $error = adminStrongPasswordHint();
                             } else {
                                 $hash = password_hash($password, PASSWORD_DEFAULT);
                                 $stmt = $db->prepare('UPDATE users SET username = ?, email = ?, role = ?, password = ? WHERE id = ?');
                                 $stmt->execute([$username, $email, $role, $hash, $id]);
+                                adminLogAction('users.update', 'Updated user with password reset: ' . $username . ' role=' . $role);
                                 $msg = 'User updated successfully.';
                                 $action = 'list';
                             }
                         } else {
                             $stmt = $db->prepare('UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?');
                             $stmt->execute([$username, $email, $role, $id]);
+                            adminLogAction('users.update', 'Updated user: ' . $username . ' role=' . $role);
                             $msg = 'User updated successfully.';
                             $action = 'list';
                         }
@@ -97,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $error = 'Deleting super admin accounts is not allowed from panel.';
                 } else {
                     $db->prepare('DELETE FROM users WHERE id = ?')->execute([$id]);
+                    adminLogAction('users.delete', 'Deleted user id=' . $id);
                     $msg = 'User deleted successfully.';
                 }
             } catch (Exception $e) {
@@ -145,6 +149,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action === 'edit'): ?>
             <input type="hidden" name="id" value="<?php echo (int)$editUser['id']; ?>">
@@ -191,6 +196,9 @@ require_once __DIR__ . '/layout-header.php';
                 </div>
                 <div class="col-12" style="color:var(--text-muted);font-size:.92rem;">
                     Roles: Team Manager can access Team Members, CRM Manager can access Registrations/Messages, Content Manager can access website content modules.
+                </div>
+                <div class="col-12" style="color:var(--text-muted);font-size:.88rem;">
+                    Password policy: at least 8 characters with uppercase, lowercase, number, and symbol.
                 </div>
                 <div class="col-12 pt-2 d-flex gap-2">
                     <button type="submit" class="btn-admin-primary">
@@ -247,6 +255,7 @@ require_once __DIR__ . '/layout-header.php';
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
                             <form method="POST" style="display:inline;">
+                                <?php echo adminCsrfField(); ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo (int)$u['id']; ?>">
                                 <button type="submit" class="btn-action btn-delete confirm-delete" <?php echo (int)$u['id'] === (int)($_SESSION['admin_id'] ?? 0) ? 'disabled' : ''; ?>>

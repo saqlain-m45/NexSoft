@@ -83,6 +83,11 @@ $activePage = $activePage ?? '';
                 <i class="bi bi-person-lines-fill"></i> Admin Users
             </a>
             <?php endif; ?>
+            <?php if (adminHasPermission('backups')): ?>
+            <a href="<?php echo adminUrl('backups.php'); ?>" class="sidebar-link <?php echo $activePage==='backups'?'active':''; ?>">
+                <i class="bi bi-database-down"></i> Backups & Export
+            </a>
+            <?php endif; ?>
             <a href="<?php echo adminUrl('profile.php'); ?>" class="sidebar-link <?php echo $activePage==='profile'?'active':''; ?>">
                 <i class="bi bi-person-badge"></i> My Account
             </a>

@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ── Verify applicant ──
     if ($actionPost === 'verify' && $id) {
         $db->prepare("UPDATE registrations SET status='verified' WHERE id=?")->execute([$id]);
+        adminLogAction('registrations.verify', 'Verified registration id=' . $id);
         $reg = $db->prepare("SELECT name, email FROM registrations WHERE id=?");
         $reg->execute([$id]);
         $u = $reg->fetch();
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ── Reject applicant ──
     elseif ($actionPost === 'reject' && $id) {
         $db->prepare("UPDATE registrations SET status='rejected' WHERE id=?")->execute([$id]);
+        adminLogAction('registrations.reject', 'Rejected registration id=' . $id);
         $reg = $db->prepare("SELECT name, email FROM registrations WHERE id=?");
         $reg->execute([$id]);
         $u = $reg->fetch();
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ── Delete ──
     elseif ($actionPost === 'delete' && $id) {
         $db->prepare("DELETE FROM registrations WHERE id=?")->execute([$id]);
+        adminLogAction('registrations.delete', 'Deleted registration id=' . $id);
         $msg = 'Registration deleted.';
         $action = 'list';
     }
@@ -66,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $db->prepare("UPDATE registrations SET name=?, email=?, phone=?, skills=?, portfolio_link=?, message=? WHERE id=?")
                ->execute([$name, $email, $phone, $skills, $portfolio, $message, $id]);
+                adminLogAction('registrations.update', 'Updated registration id=' . $id . ' name=' . $name);
             $msg = 'Registration updated.';
         }
         $action = 'list';
@@ -158,6 +162,7 @@ require_once __DIR__ . '/layout-header.php';
                 <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
                     <?php if (($viewReg['status'] ?? 'pending') !== 'verified'): ?>
                     <form method="POST">
+                        <?php echo adminCsrfField(); ?>
                         <input type="hidden" name="action" value="verify">
                         <input type="hidden" name="id" value="<?php echo $viewReg['id']; ?>">
                         <button type="submit" class="btn-admin-primary" style="background:linear-gradient(135deg,#22c55e,#16a34a);">
@@ -170,6 +175,7 @@ require_once __DIR__ . '/layout-header.php';
 
                     <?php if (($viewReg['status'] ?? 'pending') !== 'rejected'): ?>
                     <form method="POST">
+                        <?php echo adminCsrfField(); ?>
                         <input type="hidden" name="action" value="reject">
                         <input type="hidden" name="id" value="<?php echo $viewReg['id']; ?>">
                         <button type="submit" class="btn-admin-primary" style="background:linear-gradient(135deg,#ef4444,#dc2626);">
@@ -188,6 +194,7 @@ require_once __DIR__ . '/layout-header.php';
             <div class="admin-card-header"><span class="admin-card-title"><i class="bi bi-pencil me-2" style="color:var(--secondary);"></i>Edit Details</span></div>
             <div class="admin-card-body">
                 <form method="POST" class="admin-form">
+                    <?php echo adminCsrfField(); ?>
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" name="id" value="<?php echo $viewReg['id']; ?>">
                     <div class="row g-2">
@@ -213,6 +220,7 @@ require_once __DIR__ . '/layout-header.php';
             <div class="admin-card-body">
                 <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">This will permanently delete this applicant's record.</p>
                 <form method="POST">
+                    <?php echo adminCsrfField(); ?>
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="<?php echo $viewReg['id']; ?>">
                     <button type="submit" class="btn-action btn-delete confirm-delete" style="padding:8px 20px;font-size:0.88rem;">

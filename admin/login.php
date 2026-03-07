@@ -10,15 +10,19 @@ if (isset($_SESSION['admin_id'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!adminValidateCsrfFromRequest()) {
+        $error = 'Security token expired. Please try again.';
+    }
+
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if (empty($username) || empty($password)) {
+    if (empty($error) && (empty($username) || empty($password))) {
         $error = 'Please enter both username and password.';
-    } elseif (adminLogin($username, $password)) {
+    } elseif (empty($error) && adminLogin($username, $password)) {
         header('Location: /NexSoft/admin/dashboard.php');
         exit;
-    } else {
+    } elseif (empty($error)) {
         $error = 'Invalid username or password. Please try again.';
     }
 }
@@ -54,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" action="">
+            <?php echo adminCsrfField(); ?>
             <div class="mb-3">
                 <label for="username" style="font-size:0.85rem;font-weight:600;color:var(--text);display:block;margin-bottom:6px;">Username</label>
                 <div style="position:relative;">

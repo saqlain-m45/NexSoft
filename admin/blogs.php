@@ -29,11 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['featured_image']['name'])) {
             $allowed = ['image/jpeg','image/jpg','image/png','image/gif','image/webp'];
             if (in_array($_FILES['featured_image']['type'], $allowed) && $_FILES['featured_image']['size'] < 5000000) {
-                $ext = pathinfo($_FILES['featured_image']['name'], PATHINFO_EXTENSION);
-                $imgName = uniqid('blog_') . '.' . $ext;
                 $uploadDir = __DIR__ . '/../assets/uploads/blogs/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
-                move_uploaded_file($_FILES['featured_image']['tmp_name'], $uploadDir . $imgName);
+                try {
+                    $imgName = adminOptimizeAndSaveImage($_FILES['featured_image']['tmp_name'], $uploadDir, 'blog', 1700, 82);
+                } catch (Throwable $e) {
+                    $error = $e->getMessage();
+                }
             } else {
                 $error = 'Invalid image file.';
             }
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $stmt = $db->prepare("INSERT INTO blog_posts (title, slug, content, excerpt, featured_image, author) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $slug, $content, $excerpt, $imgName, $author]);
+                adminLogAction('blogs.create', 'Created blog post: ' . $title);
                 $msg = 'Blog post published!';
             } else {
                 $id = (int)($_POST['id'] ?? 0);
@@ -60,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $db->prepare("UPDATE blog_posts SET title=?, slug=?, content=?, excerpt=?, author=? WHERE id=?");
                     $stmt->execute([$title, $slug, $content, $excerpt, $author, $id]);
                 }
+                adminLogAction('blogs.update', 'Updated blog post id=' . $id . ' title=' . $title);
                 $msg = 'Blog post updated!';
             }
             $action = 'list';
@@ -74,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (file_exists($imgPath)) unlink($imgPath);
         }
         $db->prepare("DELETE FROM blog_posts WHERE id = ?")->execute([$id]);
+        adminLogAction('blogs.delete', 'Deleted blog post id=' . $id);
         $msg = 'Blog post deleted.';
     }
 }
@@ -112,6 +116,7 @@ require_once __DIR__ . '/layout-header.php';
     </div>
     <div class="admin-card-body">
         <form method="POST" enctype="multipart/form-data" class="admin-form">
+            <?php echo adminCsrfField(); ?>
             <input type="hidden" name="action" value="<?php echo $action; ?>">
             <?php if ($action === 'edit'): ?>
             <input type="hidden" name="id" value="<?php echo $editPost['id']; ?>">
@@ -189,6 +194,7 @@ require_once __DIR__ . '/layout-header.php';
                         <div style="display:flex;gap:6px;">
                             <a href="<?php echo adminUrl('blogs.php?action=edit&id=' . $post['id']); ?>" class="btn-action btn-edit"><i class="bi bi-pencil"></i> Edit</a>
                             <form method="POST" style="display:inline;">
+                                <?php echo adminCsrfField(); ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?php echo $post['id']; ?>">
                                 <button type="submit" class="btn-action btn-delete confirm-delete"><i class="bi bi-trash"></i> Delete</button>
