@@ -8,6 +8,15 @@ $action = $_GET['action'] ?? 'list';
 $msg = $_GET['msg'] ?? '';
 $error = $_GET['error'] ?? '';
 
+$hasCourseSlug = false;
+try {
+    $colCheck = $db->query("SHOW COLUMNS FROM courses LIKE 'slug'");
+    $hasCourseSlug = (bool)$colCheck->fetch();
+}
+catch (Throwable $e) {
+    $hasCourseSlug = false;
+}
+
 // Handle CRUD Actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
@@ -18,8 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
 
         if ($_POST['action'] === 'add') {
-            $stmt = $db->prepare("INSERT INTO courses (title, slug, description, category, registration_open) VALUES (?, ?, ?, ?, 1)");
-            if ($stmt->execute([$title, $slug, $description, $category])) {
+            if ($hasCourseSlug) {
+                $stmt = $db->prepare("INSERT INTO courses (title, slug, description, category, registration_open) VALUES (?, ?, ?, ?, 1)");
+                $ok = $stmt->execute([$title, $slug, $description, $category]);
+            }
+            else {
+                $stmt = $db->prepare("INSERT INTO courses (title, description, category, registration_open) VALUES (?, ?, ?, 1)");
+                $ok = $stmt->execute([$title, $description, $category]);
+            }
+
+            if ($ok) {
                 header('Location: courses.php?msg=Course added successfully');
                 exit;
             }
@@ -28,8 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         elseif ($_POST['action'] === 'edit' && $id) {
-            $stmt = $db->prepare("UPDATE courses SET title = ?, slug = ?, description = ?, category = ? WHERE id = ?");
-            if ($stmt->execute([$title, $slug, $description, $category, $id])) {
+            if ($hasCourseSlug) {
+                $stmt = $db->prepare("UPDATE courses SET title = ?, slug = ?, description = ?, category = ? WHERE id = ?");
+                $ok = $stmt->execute([$title, $slug, $description, $category, $id]);
+            }
+            else {
+                $stmt = $db->prepare("UPDATE courses SET title = ?, description = ?, category = ? WHERE id = ?");
+                $ok = $stmt->execute([$title, $description, $category, $id]);
+            }
+
+            if ($ok) {
                 header('Location: courses.php?msg=Course updated successfully');
                 exit;
             }
@@ -184,7 +209,7 @@ endif; ?>
                                     </span>
                                     <span class="small text-muted" style="font-size: 0.7rem;"><i
                                             class="bi bi-link-45deg"></i> /
-                                        <?php echo htmlspecialchars($course['slug']); ?>
+                                        <?php echo htmlspecialchars($course['slug'] ?? strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $course['title'] ?? '')))); ?>
                                     </span>
                                 </div>
                             </td>

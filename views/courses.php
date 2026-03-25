@@ -99,7 +99,7 @@
                     style="background-color: #f1f5f9; border-radius: 50%; padding: 8px; opacity: 1;"></button>
             </div>
             <div class="modal-body" style="padding: 25px;">
-                <form action="/NexSoft/?route=courses" method="POST" id="modalRegForm">
+                <form action="<?php echo baseUrl('?route=courses'); ?>" method="POST" id="modalRegForm">
                     <input type="hidden" name="course_id" id="modalCourseId">
                     <div class="mb-3">
                         <label class="form-label" style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">Full

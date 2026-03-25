@@ -3,7 +3,7 @@ require_once __DIR__ . '/auth.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['admin_id'])) {
-    header('Location: /NexSoft/admin/dashboard.php');
+    header('Location: ' . adminUrl('dashboard.php'));
     exit;
 }
 
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($error) && (empty($username) || empty($password))) {
         $error = 'Please enter both username and password.';
     } elseif (empty($error) && adminLogin($username, $password)) {
-        header('Location: /NexSoft/admin/dashboard.php');
+        header('Location: ' . adminUrl('dashboard.php'));
         exit;
     } elseif (empty($error)) {
         $error = 'Invalid username or password. Please try again.';
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;">
-            <a href="/NexSoft/" style="font-size:0.82rem;color:var(--secondary);font-weight:600;display:inline-flex;align-items:center;gap:5px;">
+            <a href="<?php echo baseUrl(); ?>" style="font-size:0.82rem;color:var(--secondary);font-weight:600;display:inline-flex;align-items:center;gap:5px;">
                 <i class="bi bi-arrow-left"></i> Back to Website
             </a>
         </div>

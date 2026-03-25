@@ -41,8 +41,15 @@ function getDB(): PDO
 // Base URL helper
 function baseUrl(string $path = ''): string
 {
-    $base = '/NexSoft';
-    return $base . ($path ? '/' . ltrim($path, '/') : '');
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $dir = str_replace('\\', '/', dirname($scriptName));
+    $base = ($dir === '/' || $dir === '.') ? '' : rtrim($dir, '/');
+
+    if ($path === '') {
+        return $base === '' ? '/' : $base;
+    }
+
+    return ($base === '' ? '' : $base) . '/' . ltrim($path, '/');
 }
 
 // Asset URL helper

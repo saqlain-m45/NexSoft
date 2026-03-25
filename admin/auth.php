@@ -348,11 +348,12 @@ function adminRequirePermission(string $permission): void
 // Admin base URL helper
 function adminUrl(string $page = ''): string
 {
-    return '/NexSoft/admin/' . ltrim($page, '/');
+    $base = rtrim(baseUrl(), '/');
+    return $base . '/admin/' . ltrim($page, '/');
 }
 
 // Admin asset URL
 function adminAsset(string $path): string
 {
-    return '/NexSoft/assets/' . ltrim($path, '/');
+    return baseUrl('assets/' . ltrim($path, '/'));
 }
