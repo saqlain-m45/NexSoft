@@ -21,6 +21,7 @@ $routes = [
     'register' => ['controllers/RegisterController.php', 'RegisterController'],
     'courses' => ['controllers/CoursesController.php', 'CoursesController'],
     'internships' => ['controllers/InternshipsController.php', 'InternshipsController'],
+    'verify' => ['controllers/VerifyController.php', 'VerifyController'],
 ];
 
 if (isset($routes[$route])) {

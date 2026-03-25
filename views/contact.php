@@ -72,28 +72,28 @@
                         <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
                         <div>
                             <div class="contact-info-label">Office Address</div>
-                            <div class="contact-info-value">123 Innovation Drive, Tech City<br>California, CA 94105, USA</div>
+                            <div class="contact-info-value">KUST University, Bannu Road,<br>Kohat, 26000</div>
                         </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
                         <div>
                             <div class="contact-info-label">Phone Number</div>
-                            <div class="contact-info-value">+1 (555) 234-5678</div>
+                            <div class="contact-info-value">+92 3400 965393</div>
                         </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
                         <div>
                             <div class="contact-info-label">Email Address</div>
-                            <div class="contact-info-value">hello@nexsofthub.com</div>
+                            <div class="contact-info-value">info.nexsofthub@gmail.com</div>
                         </div>
                     </div>
                     <div class="contact-info-item">
                         <div class="contact-info-icon"><i class="bi bi-clock-fill"></i></div>
                         <div>
                             <div class="contact-info-label">Working Hours</div>
-                            <div class="contact-info-value">Mon–Fri: 9:00 AM – 6:00 PM<br>Sat: 10:00 AM – 2:00 PM</div>
+                            <div class="contact-info-value">Mon–Fri: 09:00 AM – 4:00 PM<br>/div>
                         </div>
                     </div>
 

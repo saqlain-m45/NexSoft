@@ -11,6 +11,9 @@ $registrationCount  = (int)$db->query("SELECT COUNT(*) FROM registrations")->fet
 $messageCount       = (int)$db->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
 $serviceCount       = (int)$db->query("SELECT COUNT(*) FROM services")->fetchColumn();
 $testimonialCount   = (int)$db->query("SELECT COUNT(*) FROM testimonials")->fetchColumn();
+$internshipCount    = (int)$db->query("SELECT COUNT(*) FROM hr_internships")->fetchColumn();
+$appCount           = (int)$db->query("SELECT COUNT(*) FROM course_registrations WHERE course_id IN (SELECT id FROM hr_internships)")->fetchColumn();
+$certCount          = (int)$db->query("SELECT COUNT(*) FROM issued_documents")->fetchColumn();
 
 $recentMessages = adminHasPermission('messages')
     ? $db->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll()
@@ -76,6 +79,9 @@ require_once __DIR__ . '/layout-header.php';
         ['icon'=>'bi-chat-left-text-fill','count'=>$messageCount,'label'=>'Messages','class'=>'orange','link'=>'messages.php'],
         ['icon'=>'bi-cpu','count'=>$serviceCount,'label'=>'Services','class'=>'cyan','link'=>'services.php'],
         ['icon'=>'bi-chat-quote','count'=>$testimonialCount,'label'=>'Testimonials','class'=>'yellow','link'=>'testimonials.php'],
+        ['icon'=>'bi-briefcase-fill','count'=>$internshipCount,'label'=>'Internships','class'=>'blue','link'=>'internships.php'],
+        ['icon'=>'bi-person-badge-fill','count'=>$appCount,'label'=>'Intern Apps','class'=>'teal','link'=>'intern_applications.php'],
+        ['icon'=>'bi-patch-check-fill','count'=>$certCount,'label'=>'Issued Docs','class'=>'green','link'=>'certificates.php'],
     ];
     foreach($stats as $s):
         $perm = basename($s['link'], '.php');
@@ -115,6 +121,12 @@ require_once __DIR__ . '/layout-header.php';
                     <?php endif; ?>
                     <?php if (adminHasPermission('messages')): ?>
                     <a href="<?php echo adminUrl('messages.php'); ?>" class="btn-admin-secondary"><i class="bi bi-envelope"></i> View Messages</a>
+                    <?php endif; ?>
+                    <?php if (adminHasPermission('internships')): ?>
+                    <a href="<?php echo adminUrl('internships.php?action=add'); ?>" class="btn-admin-primary"><i class="bi bi-plus-circle"></i> Add Internship</a>
+                    <?php endif; ?>
+                    <?php if (adminHasPermission('certificates')): ?>
+                    <a href="<?php echo adminUrl('certificates.php'); ?>" class="btn-admin-secondary"><i class="bi bi-patch-check"></i> View Documents</a>
                     <?php endif; ?>
                     <a href="/NexSoft/" target="_blank" class="btn-admin-secondary"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
                 </div>

@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'social' => ['facebook_link', 'twitter_link', 'linkedin_link', 'instagram_link', 'github_link'],
         'email' => ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_encryption'],
         'advanced' => ['google_analytics_id', 'custom_head_scripts', 'custom_footer_scripts', 'responsive_enabled', 'custom_cursor_enabled'],
+        'hr' => ['hr_doc_logo_text', 'hr_doc_footer_text', 'hr_doc_certificate_signer', 'hr_doc_certificate_designation', 'hr_doc_experience_signer', 'hr_doc_experience_designation'],
     ];
 
     $settings = [
@@ -42,7 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'custom_footer_scripts' => $_POST['custom_footer_scripts'] ?? '',
         'responsive_enabled'    => $_POST['responsive_enabled'] ?? '0',
         'custom_cursor_enabled' => $_POST['custom_cursor_enabled'] ?? '0',
-        'maintenance_mode'      => $_POST['maintenance_mode'] ?? '0'
+        'maintenance_mode'      => $_POST['maintenance_mode'] ?? '0',
+        'hr_doc_logo_text'      => $_POST['hr_doc_logo_text'] ?? '',
+        'hr_doc_footer_text'    => $_POST['hr_doc_footer_text'] ?? '',
+        'hr_doc_certificate_signer' => $_POST['hr_doc_certificate_signer'] ?? '',
+        'hr_doc_certificate_designation' => $_POST['hr_doc_certificate_designation'] ?? '',
+        'hr_doc_experience_signer' => $_POST['hr_doc_experience_signer'] ?? '',
+        'hr_doc_experience_designation' => $_POST['hr_doc_experience_designation'] ?? '',
     ];
 
     $settingsToSave = $settings;
@@ -127,6 +134,7 @@ require_once __DIR__ . '/layout-header.php';
             <?php echo adminCsrfField(); ?>
             <input type="hidden" name="settings_group" id="settingsGroupInput" value="all">
             <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+                <?php if (adminRole() === 'super_admin'): ?>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="tab-general" data-bs-toggle="tab" data-bs-target="#pane-general" type="button" role="tab" aria-controls="pane-general" aria-selected="true">General</button>
                 </li>
@@ -145,9 +153,14 @@ require_once __DIR__ . '/layout-header.php';
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="tab-advanced" data-bs-toggle="tab" data-bs-target="#pane-advanced" type="button" role="tab" aria-controls="pane-advanced" aria-selected="false">Advanced</button>
                 </li>
+                <?php endif; ?>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link <?php echo adminRole() !== 'super_admin' ? 'active' : ''; ?>" id="tab-hr" data-bs-toggle="tab" data-bs-target="#pane-hr" type="button" role="tab" aria-controls="pane-hr" aria-selected="<?php echo adminRole() !== 'super_admin' ? 'true' : 'false'; ?>">HR Documents</button>
+                </li>
             </ul>
 
             <div class="tab-content" id="settingsTabsContent">
+                <?php if (adminRole() === 'super_admin'): ?>
                 <div class="tab-pane fade show active" id="pane-general" role="tabpanel" aria-labelledby="tab-general" tabindex="0">
                     <div class="row g-3">
                         <div class="col-12">
@@ -319,6 +332,45 @@ require_once __DIR__ . '/layout-header.php';
                         <div class="col-12">
                             <label>Custom Footer Scripts (JS before &lt;/body&gt;)</label>
                             <textarea name="custom_footer_scripts" class="form-control" rows="4"><?php echo htmlspecialchars($currentSettings['custom_footer_scripts'] ?? ''); ?></textarea>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <div class="tab-pane fade <?php echo adminRole() !== 'super_admin' ? 'show active' : ''; ?>" id="pane-hr" role="tabpanel" aria-labelledby="tab-hr" tabindex="0">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="mb-1 text-primary">HR Document Customization</h5>
+                            <p class="text-muted mb-3" style="font-size:.9rem;">Adjust letterhead, logo text, and signatures for Certificates and Experience Letters.</p>
+                        </div>
+                        <div class="col-12">
+                            <label>Logo Text / HTML (for Letterhead)</label>
+                            <input type="text" name="hr_doc_logo_text" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['hr_doc_logo_text'] ?? 'NexSoft <span>Hub</span>'); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Certificate Signer Name</label>
+                            <input type="text" name="hr_doc_certificate_signer" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['hr_doc_certificate_signer'] ?? 'SAQLAIN MUZAFFAR'); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Certificate Signer Designation</label>
+                            <input type="text" name="hr_doc_certificate_designation" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['hr_doc_certificate_designation'] ?? 'CEO & Founder, NexSoft Hub'); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Experience Letter Signer Name</label>
+                            <input type="text" name="hr_doc_experience_signer" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['hr_doc_experience_signer'] ?? 'HR MANAGER'); ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Experience Letter Signer Designation</label>
+                            <input type="text" name="hr_doc_experience_designation" class="form-control"
+                                   value="<?php echo htmlspecialchars($currentSettings['hr_doc_experience_designation'] ?? 'NexSoft HR Department'); ?>">
+                        </div>
+                        <div class="col-12">
+                            <label>Global Footer Text (e.g. Verify at website.com)</label>
+                            <textarea name="hr_doc_footer_text" class="form-control" rows="2"><?php echo htmlspecialchars($currentSettings['hr_doc_footer_text'] ?? 'Verify at nexsofthub.com/verify'); ?></textarea>
                         </div>
                     </div>
                 </div>

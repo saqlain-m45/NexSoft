@@ -57,6 +57,10 @@ function adminRoleConfig(): array
             'label' => 'Settings Manager',
             'permissions' => ['dashboard', 'settings'],
         ],
+        'hr_manager' => [
+            'label' => 'HR Manager',
+            'permissions' => ['dashboard', 'internships', 'applications', 'certificates', 'courses', 'settings', 'templates'],
+        ],
         'viewer' => [
             'label' => 'Viewer',
             'permissions' => ['dashboard'],
@@ -89,6 +93,87 @@ function ensureAuditLogSchema(PDO $db): void
         INDEX idx_action (action),
         INDEX idx_created_at (created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    $checked = true;
+}
+
+function ensureHrSchema(PDO $db): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+
+    // Table for Internships/Courses management
+    $db->exec("CREATE TABLE IF NOT EXISTS hr_internships (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        category ENUM('internship', 'course') NOT NULL DEFAULT 'internship',
+        description TEXT NULL,
+        duration VARCHAR(100) NULL,
+        status ENUM('active', 'closed') NOT NULL DEFAULT 'active',
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Table for issued Certificates and Experience Letters
+    $db->exec("CREATE TABLE IF NOT EXISTS issued_documents (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        document_id VARCHAR(50) UNIQUE NOT NULL,
+        type ENUM('certificate', 'experience_letter') NOT NULL,
+        recipient_name VARCHAR(255) NOT NULL,
+        recipient_email VARCHAR(255) NOT NULL,
+        internship_id INT NOT NULL,
+        issue_date DATE NOT NULL,
+        verification_code VARCHAR(100) UNIQUE NOT NULL,
+        status ENUM('active', 'revoked') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_document_id (document_id),
+        INDEX idx_verification_code (verification_code)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS hr_document_templates (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        type ENUM('certificate', 'experience_letter') NOT NULL,
+        category ENUM('internship', 'course', 'both') DEFAULT 'both',
+        body_text TEXT,
+        styles TEXT,
+        is_default TINYINT(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+    // Seed default templates if none exist
+    $count = $db->query("SELECT COUNT(*) FROM hr_document_templates")->fetchColumn();
+    if ($count == 0) {
+        $stmt = $db->prepare("INSERT INTO hr_document_templates (name, type, category, body_text, is_default) VALUES (?, ?, ?, ?, ?)");
+        
+        // Default Internship Certificate
+        $stmt->execute([
+            'Standard Internship Certificate', 
+            'certificate', 
+            'internship', 
+            'This is to certify that {{name}} has successfully completed the {{title}} program. Throughout the duration of {{duration}}, the candidate demonstrated exceptional dedication, technical proficiency, and a commitment to professional growth.',
+            1
+        ]);
+
+        // Default Course Certificate
+        $stmt->execute([
+            'Standard Course Certificate', 
+            'certificate', 
+            'course', 
+            'This is to certify that {{name}} has successfully completed the {{title}} course. Throughout the duration of {{duration}}, the candidate demonstrated exceptional dedication and technical proficiency.',
+            0
+        ]);
+
+        // Default Experience Letter
+        $stmt->execute([
+            'Standard Experience Letter', 
+            'experience_letter', 
+            'both', 
+            'To Whom It May Concern, this is to verify that {{name}} has worked as an Intern for the {{title}} program at NexSoft Hub. During the period of {{duration}}, the candidate exhibited strong professional ethics, quick learning abilities, and contributed significantly to our development team.',
+            1
+        ]);
+    }
 
     $checked = true;
 }
@@ -143,7 +228,7 @@ function adminEnforceCsrfForPost(): void
         echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Security Check Failed</title></head><body style="font-family:Arial,sans-serif;background:#f8f9fb;padding:40px;">';
         echo '<div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #e6e8f0;border-radius:12px;padding:24px;">';
         echo '<h2 style="margin-top:0">Security token mismatch</h2><p>Your session token is missing or expired. Please refresh and try again.</p>';
-        echo '<p><a href="' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/NexSoft/admin/dashboard.php') . '">Reload page</a></p></div></body></html>';
+        echo '<p><a href="' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? adminUrl('dashboard.php')) . '">Reload page</a></p></div></body></html>';
         exit;
     }
 }
@@ -250,7 +335,7 @@ function adminOptimizeAndSaveImage(string $tmpPath, string $destDir, string $pre
 function adminCheck(): void
 {
     if (!isset($_SESSION['admin_id'])) {
-        header('Location: /NexSoft/admin/login.php');
+        header('Location: ' . adminUrl('login.php'));
         exit;
     }
 
@@ -261,6 +346,9 @@ function adminCheck(): void
         $stmt->execute([$_SESSION['admin_id']]);
         $_SESSION['admin_role'] = normalizeAdminRole($stmt->fetchColumn() ?: 'viewer');
     }
+
+    $db = getDB();
+    ensureHrSchema($db);
 
     adminCsrfToken();
     adminEnforceCsrfForPost();
@@ -293,7 +381,7 @@ function adminLogout(): void
 {
     adminLogAction('auth.logout', 'User logged out');
     session_destroy();
-    header('Location: /NexSoft/admin/login.php');
+    header('Location: ' . adminUrl('login.php'));
     exit;
 }
 

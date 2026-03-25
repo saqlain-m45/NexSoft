@@ -39,11 +39,32 @@ function getDB(): PDO
 }
 
 // Base URL helper
+function appBasePath(): string
+{
+    static $basePath = null;
+    if ($basePath !== null) {
+        return $basePath;
+    }
+
+    $documentRoot = isset($_SERVER['DOCUMENT_ROOT']) ? realpath((string)$_SERVER['DOCUMENT_ROOT']) : false;
+
+    if ($documentRoot && str_starts_with(strtolower(ROOT_PATH), strtolower($documentRoot))) {
+        $relativePath = substr(ROOT_PATH, strlen($documentRoot));
+        $normalized = trim(str_replace('\\', '/', (string)$relativePath), '/');
+        $basePath = $normalized === '' ? '' : '/' . $normalized;
+        return $basePath;
+    }
+
+    // Fallback when DOCUMENT_ROOT is unavailable (e.g. CLI execution).
+    $scriptName = (string)($_SERVER['SCRIPT_NAME'] ?? '');
+    $dir = str_replace('\\', '/', dirname($scriptName));
+    $basePath = ($dir === '/' || $dir === '.') ? '' : rtrim($dir, '/');
+    return $basePath;
+}
+
 function baseUrl(string $path = ''): string
 {
-    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-    $dir = str_replace('\\', '/', dirname($scriptName));
-    $base = ($dir === '/' || $dir === '.') ? '' : rtrim($dir, '/');
+    $base = appBasePath();
 
     if ($path === '') {
         return $base === '' ? '/' : $base;

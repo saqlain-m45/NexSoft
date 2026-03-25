@@ -90,6 +90,48 @@ endif; ?>
                 <?php
 endif; ?>
 
+                <div class="sidebar-section-label" style="margin-top:1rem;">HR Management</div>
+                <?php if (adminHasPermission('internships')): ?>
+                <a href="<?php echo adminUrl('internships.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'internships' ? 'active' : ''; ?>">
+                    <i class="bi bi-briefcase-fill"></i> Internships/Courses
+                </a>
+                <?php
+endif; ?>
+                <?php if (adminHasPermission('applications')): ?>
+                <a href="<?php echo adminUrl('intern_applications.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'applications' ? 'active' : ''; ?>">
+                    <i class="bi bi-person-badge-fill"></i> Intern Applications
+                </a>
+                <?php
+endif; ?>
+                <?php if (adminHasPermission('templates')): ?>
+                <a href="<?php echo adminUrl('design-templates.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'design-templates' ? 'active' : ''; ?>">
+                    <i class="bi bi-paint"></i> Design Templates
+                </a>
+                <a href="<?php echo adminUrl('design-assets.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'design-assets' ? 'active' : ''; ?>">
+                    <i class="bi bi-palette-fill"></i> Design Assets
+                </a>
+                <a href="<?php echo adminUrl('document_templates.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'templates' ? 'active' : ''; ?>">
+                    <i class="bi bi-file-earmark-richtext"></i> Document Templates
+                </a>
+                <?php
+endif; ?>
+                <?php if (adminHasPermission('certificates')): ?>
+                <a href="<?php echo adminUrl('generate-document.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'generate-doc' ? 'active' : ''; ?>">
+                    <i class="bi bi-file-earmark-pdf-fill"></i> Generate Document
+                </a>
+                <a href="<?php echo adminUrl('certificates.php'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'certificates' ? 'active' : ''; ?>">
+                    <i class="bi bi-patch-check-fill"></i> Issued Documents
+                </a>
+                <?php
+endif; ?>
+
                 <div class="sidebar-section-label" style="margin-top:1rem;">Site</div>
                 <?php if (adminHasPermission('settings')): ?>
                 <a href="<?php echo adminUrl('settings.php'); ?>"

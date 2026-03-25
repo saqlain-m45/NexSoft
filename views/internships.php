@@ -1,96 +1,57 @@
 <?php require_once __DIR__ . '/../components/header.php'; ?>
 
-<section
-    style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: #0B1F3B; position: relative; overflow: hidden; padding: 60px 0;">
-    <!-- Animated Background Elements -->
-    <div class="shape"
-        style="position: absolute; top: -10%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(14,165,164,0.15) 0%, transparent 70%); border-radius: 50%; animation: float 10s infinite alternate;">
-    </div>
-    <div class="shape"
-        style="position: absolute; bottom: -10%; right: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(14,165,164,0.1) 0%, transparent 70%); border-radius: 50%; animation: float 15s infinite alternate-reverse;">
-    </div>
-
-    <div class="container text-center" style="position: relative; z-index: 10;">
-        <div class="coming-soon-badge"
-            style="display: inline-flex; align-items: center; gap: 10px; background: rgba(14,165,164,0.1); border: 1px solid rgba(14,165,164,0.3); color: #0EA5A4; padding: 8px 24px; border-radius: 50px; font-weight: 700; margin-bottom: 30px; font-size: 0.9rem; animation: fadeInUp 0.8s ease;">
-            <span class="pulse"
-                style="width: 8px; height: 8px; background: #0EA5A4; border-radius: 50%; display: inline-block;"></span>
-            FUTURE OPPORTUNITIES
+<section class="py-5" style="background: var(--bg); min-height: 80vh;">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-900 mb-3">Careers & <span class="text-secondary">Internships</span></h1>
+            <p class="text-muted fs-5 mx-auto" style="max-width: 700px;">Join NexSoft Hub's elite training programs. We offer hands-on experience in cutting-edge technologies to help you kickstart your professional career.</p>
         </div>
 
-        <h1
-            style="color: white; font-size: Clamp(2.5rem, 8vw, 5rem); font-weight: 900; line-height: 1; margin-bottom: 25px; letter-spacing: -2px; animation: fadeInUp 1s ease;">
-            Internships <br> <span style="color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.3);">Coming
-                Soon</span>
-        </h1>
-
-        <p
-            style="color: rgba(255,255,255,0.6); font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px; line-height: 1.7; animation: fadeInUp 1.2s ease;">
-            We're building a world-class internship program to mentor the next generation of tech leaders. Stay tuned
-            for updates!
-        </p>
-
-        <div class="action-buttons"
-            style="display: flex; gap: 15px; justify-content: center; animation: fadeInUp 1.4s ease;">
-            <a href="/NexSoft/?route=contact" class="btn"
-                style="background: #0EA5A4; color: white; padding: 15px 40px; border-radius: 50px; font-weight: 700; transition: 0.3s ease;">Notify
-                Me</a>
-            <a href="/NexSoft/" class="btn"
-                style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); padding: 15px 40px; border-radius: 50px; font-weight: 700; transition: 0.3s ease;">Back
-                to Home</a>
+        <div class="row g-4 mt-4">
+            <?php if (empty($internships)): ?>
+                <div class="col-12 text-center py-5">
+                    <div class="bg-white p-5 rounded-4 shadow-sm border border-light">
+                        <i class="bi bi-calendar-x display-1 text-muted mb-4"></i>
+                        <h3 class="fw-bold">No Active Openings</h3>
+                        <p class="text-muted">We currently don't have any open internships. Please check back later or contact us for future opportunities.</p>
+                        <a href="/NexSoft/?route=contact" class="btn btn-secondary px-4 py-2 mt-3" style="border-radius: 50px;">Get in Touch</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <?php foreach ($internships as $item): ?>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm hover-up" style="border-radius: 20px; transition: all 0.3s ease; overflow: hidden; background: white;">
+                            <div class="p-4">
+                                <span class="badge mb-3 <?php echo $item['category'] === 'internship' ? 'bg-primary' : 'bg-success'; ?> bg-opacity-10 <?php echo $item['category'] === 'internship' ? 'text-primary' : 'text-success'; ?> px-3 py-2" style="border-radius: 50px; font-size: 0.75rem; font-weight: 700;">
+                                    <?php echo strtoupper($item['category']); ?>
+                                </span>
+                                <h4 class="fw-800 mb-3" style="color: #0B1F3B;"><?php echo htmlspecialchars($item['title']); ?></h4>
+                                <div class="d-flex align-items-center mb-4 text-muted small">
+                                    <i class="bi bi-clock me-2 text-secondary"></i>
+                                    <span>Duration: <?php echo htmlspecialchars($item['duration'] ?: 'Not Specified'); ?></span>
+                                </div>
+                                <p class="text-muted small mb-4" style="line-height: 1.6;">
+                                    <?php echo htmlspecialchars(mb_strimwidth($item['description'] ?? '', 0, 120, '...')); ?>
+                                </p>
+                                <a href="/NexSoft/?route=courses" class="btn btn-outline-secondary w-100 fw-bold py-3" style="border-radius: 12px; transition: all 0.3s ease;">Apply Now</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
 <style>
-    @keyframes float {
-        0% {
-            transform: translate(0, 0) rotate(0deg);
-        }
-
-        100% {
-            transform: translate(30px, 30px) rotate(10deg);
-        }
+    .hover-up:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
     }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .pulse {
-        animation: pulse-ring 2s infinite;
-    }
-
-    @keyframes pulse-ring {
-        0% {
-            box-shadow: 0 0 0 0 rgba(14, 165, 164, 0.7);
-        }
-
-        70% {
-            box-shadow: 0 0 0 10px rgba(14, 165, 164, 0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(14, 165, 164, 0);
-        }
-    }
-
-    .coming-soon-badge {
-        box-shadow: 0 10px 30px rgba(14, 165, 164, 0.1);
-    }
-
-    .btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        filter: brightness(1.1);
+    .hover-up:hover .btn-outline-secondary {
+        background: var(--secondary) !important;
+        color: white !important;
+        border-color: var(--secondary) !important;
     }
 </style>
 
