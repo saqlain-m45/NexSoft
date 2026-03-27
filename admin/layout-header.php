@@ -106,14 +106,6 @@ endif; ?>
                 <?php
 endif; ?>
                 <?php if (adminHasPermission('templates')): ?>
-                <a href="<?php echo adminUrl('design-templates.php'); ?>"
-                    class="sidebar-link <?php echo $activePage === 'design-templates' ? 'active' : ''; ?>">
-                    <i class="bi bi-paint"></i> Design Templates
-                </a>
-                <a href="<?php echo adminUrl('design-assets.php'); ?>"
-                    class="sidebar-link <?php echo $activePage === 'design-assets' ? 'active' : ''; ?>">
-                    <i class="bi bi-palette-fill"></i> Design Assets
-                </a>
                 <a href="<?php echo adminUrl('document_templates.php'); ?>"
                     class="sidebar-link <?php echo $activePage === 'templates' ? 'active' : ''; ?>">
                     <i class="bi bi-file-earmark-richtext"></i> Document Templates
@@ -121,10 +113,6 @@ endif; ?>
                 <?php
 endif; ?>
                 <?php if (adminHasPermission('certificates')): ?>
-                <a href="<?php echo adminUrl('generate-document.php'); ?>"
-                    class="sidebar-link <?php echo $activePage === 'generate-doc' ? 'active' : ''; ?>">
-                    <i class="bi bi-file-earmark-pdf-fill"></i> Generate Document
-                </a>
                 <a href="<?php echo adminUrl('certificates.php'); ?>"
                     class="sidebar-link <?php echo $activePage === 'certificates' ? 'active' : ''; ?>">
                     <i class="bi bi-patch-check-fill"></i> Issued Documents

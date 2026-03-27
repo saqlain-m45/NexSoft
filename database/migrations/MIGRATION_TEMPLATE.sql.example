@@ -1,0 +1,43 @@
+-- ====================================================================================
+-- MIGRATION TEMPLATE
+-- ====================================================================================
+-- Copy this template and rename to follow naming convention: NNN_feature_name.sql
+-- 
+-- Name Format: 003_feature_description.sql
+-- Keep numbers sequential: 001, 002, 003, 004, 005...
+-- 
+-- Steps:
+-- 1. Copy this template
+-- 2. Rename with next sequential number (e.g., 003_user_permissions.sql)
+-- 3. Replace "YOUR_FEATURE_NAME" with your actual feature
+-- 4. Add your SQL code in the marked section
+-- 5. Save in /database/migrations/ folder
+-- 6. Run do: visit run-migrations.php
+-- ====================================================================================
+
+-- Migration: YOUR_FEATURE_NAME
+-- Author: Your Name
+-- Date: YYYY-MM-DD
+-- Description: What does this migration do? Why is it needed?
+
+USE `nexsoft_hub`;
+
+-- ====================================================================================
+-- YOUR SQL CHANGES GO HERE
+-- ====================================================================================
+-- Examples:
+-- 
+-- ALTER TABLE `users` ADD COLUMN `avatar` VARCHAR(255);
+-- CREATE TABLE `new_table` (...);
+-- UPDATE `table_name` SET column = value WHERE condition;
+-- DROP TABLE IF EXISTS `old_table`;
+-- 
+-- ====================================================================================
+
+-- REQUIRED: Mark this migration as applied
+INSERT IGNORE INTO `migrations` (`migration_name`, `batch`) VALUES
+('NNN_feature_name', 1);
+
+-- ====================================================================================
+-- DO NOT MODIFY THIS SECTION - Migration runner handles it automatically
+-- ====================================================================================

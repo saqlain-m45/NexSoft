@@ -91,12 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </a>
         </div>
 
-        <div style="margin-top:1rem;background:#f0f9ff;border-radius:var(--radius-sm);padding:0.8rem;text-align:center;">
-            <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">
-                <i class="bi bi-info-circle me-1" style="color:var(--secondary);"></i>
-                Default login: <strong>admin</strong> / <strong>admin123</strong>
-            </p>
-        </div>
+    
     </div>
 </div>
 </body>
