@@ -94,8 +94,8 @@ if (stripos($siteName, 'Hub') === false) {
                             href="<?php echo baseUrl('?route=courses'); ?>">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $currentRoute === 'internships' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=internships'); ?>">Internships</a>
+                        <a class="nav-link <?php echo ($currentRoute === 'internship' || $currentRoute === 'internships') ? 'active' : ''; ?>"
+                            href="<?php echo baseUrl('internship'); ?>">Internships</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'contact' ? 'active' : ''; ?>"

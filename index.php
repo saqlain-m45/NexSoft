@@ -9,6 +9,12 @@ require_once __DIR__ . '/config/database.php';
 $route = $_GET['route'] ?? 'home';
 $route = trim($route, '/');
 
+// Canonical URL: keep old /internships route working but redirect to /internship.
+if ($route === 'internships') {
+    header('Location: ' . baseUrl('internship'), true, 301);
+    exit;
+}
+
 // Define valid routes and their controllers
 $routes = [
     'home' => ['controllers/HomeController.php', 'HomeController'],
@@ -20,6 +26,7 @@ $routes = [
     'contact' => ['controllers/ContactController.php', 'ContactController'],
     'register' => ['controllers/RegisterController.php', 'RegisterController'],
     'courses' => ['controllers/CoursesController.php', 'CoursesController'],
+    'internship' => ['controllers/InternshipsController.php', 'InternshipsController'],
     'internships' => ['controllers/InternshipsController.php', 'InternshipsController'],
     'verify' => ['controllers/VerifyController.php', 'VerifyController'],
 ];
