@@ -437,6 +437,8 @@ function adminRequirePermission(string $permission): void
 function adminUrl(string $page = ''): string
 {
     $base = rtrim(baseUrl(), '/');
+    // Remove .php extension if present
+    $page = preg_replace('/\.php(\?.*)?$/', '$1', $page);
     return $base . '/admin/' . ltrim($page, '/');
 }
 

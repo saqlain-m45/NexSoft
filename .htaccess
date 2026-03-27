@@ -1,13 +1,22 @@
-Options -MultiViews
-RewriteEngine On
-RewriteBase /NexSoft/
+<IfModule mod_rewrite.c>
+    Options -MultiViews
+    RewriteEngine On
+    RewriteBase /NexSoft/
 
-# Hide .php extension from ALL URLs
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php [L,QSA]
-
-# Frontend routing - route to index.php for non-existent files
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+    # Don't rewrite real directories or files
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    
+    # Redirect .php extensions to clean URLs (301 redirect)
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*\.php [NC]
+    RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+    
+    # Rewrite clean URLs to .php files
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+    
+    # Frontend routing - route to index.php for non-existent files
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+</IfModule>

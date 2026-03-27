@@ -156,7 +156,7 @@ require_once __DIR__ . '/layout-header.php';
 ?>
 
 <div class="mb-4">
-    <a href="email_templates.php" class="btn btn-secondary mb-3">
+    <a href="email_templates" class="btn btn-secondary mb-3">
         <i class="bi bi-arrow-left me-1"></i> Back to Templates
     </a>
     <h2 class="h3 text-white mb-0">Send Email: <?php echo htmlspecialchars($template['name']); ?></h2>
@@ -228,7 +228,7 @@ require_once __DIR__ . '/layout-header.php';
                         <button type="submit" name="send_now" class="btn btn-success btn-lg">
                             <i class="bi bi-envelope-at me-2"></i> Send Email to Selected Recipients
                         </button>
-                        <a href="email_templates.php" class="btn btn-secondary">Cancel</a>
+                        <a href="email_templates" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

@@ -91,7 +91,7 @@ require_once __DIR__ . '/layout-header.php';
         <i class="bi bi-plus-circle me-1"></i> Create New Template
     </button>
     <?php else: ?>
-    <a href="email_templates.php" class="btn-admin-secondary">
+    <a href="email_templates" class="btn-admin-secondary">
         <i class="bi bi-arrow-left me-1"></i> Back to List
     </a>
     <?php endif; ?>
@@ -130,7 +130,7 @@ require_once __DIR__ . '/layout-header.php';
                             <a href="?edit=<?php echo $t['id']; ?>" class="btn btn-sm btn-warning me-1">
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
-                            <a href="send_email.php?template=<?php echo $t['id']; ?>" class="btn btn-sm btn-info me-1">
+                            <a href="send_email?template=<?php echo $t['id']; ?>" class="btn btn-sm btn-info me-1">
                                 <i class="bi bi-envelope"></i> Send
                             </a>
                             <a href="?delete=<?php echo $t['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this template?')">
@@ -186,7 +186,7 @@ require_once __DIR__ . '/layout-header.php';
 
                     <div class="mb-3">
                         <button type="submit" class="btn btn-success">Save Template</button>
-                        <a href="email_templates.php" class="btn btn-secondary">Cancel</a>
+                        <a href="email_templates" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
 
