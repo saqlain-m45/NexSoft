@@ -74,6 +74,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         '{company}' => $recipient['title'] ?? 'N/A',
                     ];
                 }
+            } elseif ($source === 'internships') {
+                $stmt = $db->prepare("SELECT cr.id, u.full_name, u.email, u.phone FROM course_registrations cr 
+                    JOIN users u ON cr.user_id = u.id 
+                    WHERE cr.id = ? AND cr.course_id IS NULL");
+                $stmt->execute([$recipient_id]);
+                $recipient = $stmt->fetch();
+
+                if ($recipient) {
+                    $placeholder_data = [
+                        '{name}' => $recipient['full_name'],
+                        '{email}' => $recipient['email'],
+                        '{phone}' => $recipient['phone'] ?? 'N/A',
+                        '{company}' => 'N/A',
+                    ];
+                }
             } elseif ($source === 'contact_messages') {
                 $stmt = $db->prepare("SELECT id, name, email FROM contact_messages WHERE id = ?");
                 $stmt->execute([$recipient_id]);
@@ -139,13 +154,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($source === 'users') {
     $recipients = $db->query("SELECT id, full_name, email FROM users WHERE role != 'admin' ORDER BY full_name")->fetchAll();
 } elseif ($source === 'courses') {
-    $recipients = $db->query("SELECT cr.id, CONCAT(u.full_name, ' - ', c.title) as name, u.email FROM course_registrations cr 
+    // Get students registered in courses
+    $recipients = $db->query("SELECT cr.id, u.full_name, u.email FROM course_registrations cr 
         JOIN users u ON cr.user_id = u.id 
         JOIN courses c ON cr.course_id = c.id 
+        WHERE cr.course_id IS NOT NULL
         ORDER BY u.full_name")->fetchAll();
 } elseif ($source === 'internships') {
-    // Assuming internship registrations exist
-    $recipients = $db->query("SELECT id, name, email FROM contact_messages WHERE type = 'internship' ORDER BY name")->fetchAll();
+    // Get students registered in internship programs
+    $recipients = $db->query("SELECT cr.id, u.full_name, u.email FROM course_registrations cr 
+        JOIN users u ON cr.user_id = u.id 
+        WHERE cr.course_id IS NULL
+        ORDER BY u.full_name")->fetchAll();
 } elseif ($source === 'contact_messages') {
     $recipients = $db->query("SELECT id, name, email FROM contact_messages ORDER BY name")->fetchAll();
 }
