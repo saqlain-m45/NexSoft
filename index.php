@@ -6,6 +6,20 @@
 
 require_once __DIR__ . '/config/database.php';
 
+// Canonicalize legacy query routes like /?route=about -> /about.
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['route'])) {
+    $legacyRoute = trim((string)$_GET['route'], '/');
+    $extraQueryKeys = array_diff(array_keys($_GET), ['route']);
+    if (empty($extraQueryKeys)) {
+        if ($legacyRoute === 'home' || $legacyRoute === '') {
+            header('Location: ' . baseUrl(), true, 301);
+            exit;
+        }
+        header('Location: ' . baseUrl($legacyRoute), true, 301);
+        exit;
+    }
+}
+
 $route = $_GET['route'] ?? 'home';
 $route = trim($route, '/');
 

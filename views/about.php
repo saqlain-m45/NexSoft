@@ -37,11 +37,11 @@
                     <strong style="color:var(--primary);">your success.</strong>
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-hero-primary"
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-hero-primary"
                         style="display:inline-flex;">
                         <i class="bi bi-chat-dots"></i> Work With Us
                     </a>
-                    <a href="<?php echo baseUrl('?route=services'); ?>" class="btn-hero-outline"
+                    <a href="<?php echo baseUrl('services'); ?>" class="btn-hero-outline"
                         style="display:inline-flex;border-color:var(--secondary);color:var(--secondary);">
                         <i class="bi bi-grid"></i> Our Services
                     </a>
@@ -316,10 +316,10 @@ endforeach; ?>
                 <p class="mb-4">Let's discuss how NexSoft Hub can help your business achieve its digital goals. First
                     consultation is always free.</p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-cta-white">
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-cta-white">
                         <i class="bi bi-calendar-check"></i> Book Free Consultation
                     </a>
-                    <a href="<?php echo baseUrl('?route=pricing'); ?>" class="btn-cta-outline-white">
+                    <a href="<?php echo baseUrl('pricing'); ?>" class="btn-cta-outline-white">
                         <i class="bi bi-tag"></i> View Pricing
                     </a>
                 </div>

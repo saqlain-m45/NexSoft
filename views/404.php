@@ -207,7 +207,7 @@
                 <a class="btn primary" href="<?php echo function_exists('baseUrl') ? baseUrl() : '/NexSoft/'; ?>">
                     <i class="bi bi-house-door-fill"></i> Back to Home
                 </a>
-                <a class="btn" href="<?php echo function_exists('baseUrl') ? baseUrl('?route=contact') : '/NexSoft/?route=contact'; ?>">
+                <a class="btn" href="<?php echo function_exists('baseUrl') ? baseUrl('contact') : '/NexSoft/contact'; ?>">
                     <i class="bi bi-chat-dots"></i> Contact Us
                 </a>
             </div>

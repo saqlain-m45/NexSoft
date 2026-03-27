@@ -67,7 +67,7 @@
                     </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="<?php echo baseUrl('?route=register'); ?>" class="nexsoft-form" id="registerForm" novalidate>
+                    <form method="POST" action="<?php echo baseUrl('register'); ?>" class="nexsoft-form" id="registerForm" novalidate>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="reg_name" class="form-label">Full Name <span style="color:var(--secondary);">*</span></label>

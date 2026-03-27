@@ -39,11 +39,11 @@
                         $footerServices = getDB()->query("SELECT title FROM services ORDER BY order_no ASC LIMIT 6")->fetchAll();
                         if ($footerServices): 
                             foreach($footerServices as $s): ?>
-                                <li><a href="<?php echo baseUrl('?route=services'); ?>"><?php echo h($s['title']); ?></a></li>
+                                <li><a href="<?php echo baseUrl('services'); ?>"><?php echo h($s['title']); ?></a></li>
                             <?php endforeach; 
                         else: ?>
-                            <li><a href="<?php echo baseUrl('?route=services'); ?>">Web Development</a></li>
-                            <li><a href="<?php echo baseUrl('?route=services'); ?>">App Development</a></li>
+                            <li><a href="<?php echo baseUrl('services'); ?>">Web Development</a></li>
+                            <li><a href="<?php echo baseUrl('services'); ?>">App Development</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>

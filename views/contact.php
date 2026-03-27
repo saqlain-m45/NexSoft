@@ -36,7 +36,7 @@
                     </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="<?php echo baseUrl('?route=contact'); ?>" class="nexsoft-form" id="contactForm" novalidate>
+                    <form method="POST" action="<?php echo baseUrl('contact'); ?>" class="nexsoft-form" id="contactForm" novalidate>
                         <div class="mb-3">
                             <label for="contact_name" class="form-label">Full Name <span style="color:var(--secondary);">*</span></label>
                             <input type="text" class="form-control" id="contact_name" name="name"

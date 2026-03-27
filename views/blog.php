@@ -43,12 +43,12 @@
                             <span><i class="bi bi-calendar3"></i> <?php echo date('M d, Y', strtotime($blog['created_at'])); ?></span>
                         </div>
                         <h3 class="blog-title">
-                            <a href="<?php echo baseUrl('?route=blog-single&slug=' . urlencode($blog['slug'])); ?>" style="color:inherit;">
+                            <a href="<?php echo baseUrl('blog-single?slug=' . urlencode($blog['slug'])); ?>" style="color:inherit;">
                                 <?php echo htmlspecialchars($blog['title']); ?>
                             </a>
                         </h3>
                         <p class="blog-excerpt"><?php echo htmlspecialchars($blog['excerpt'] ?? ''); ?></p>
-                        <a href="<?php echo baseUrl('?route=blog-single&slug=' . urlencode($blog['slug'])); ?>" class="blog-read-more">
+                        <a href="<?php echo baseUrl('blog-single?slug=' . urlencode($blog['slug'])); ?>" class="blog-read-more">
                             Read More <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -64,7 +64,7 @@
                 <ul class="pagination pagination-nexsoft gap-1">
                     <?php if ($page > 1): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?php echo baseUrl('?route=blog&page=' . ($page - 1)); ?>">
+                        <a class="page-link" href="<?php echo baseUrl('blog?page=' . ($page - 1)); ?>">
                             <i class="bi bi-chevron-left"></i>
                         </a>
                     </li>
@@ -72,13 +72,13 @@
 
                     <?php for ($p = 1; $p <= $totalPages; $p++): ?>
                     <li class="page-item <?php echo $p === $page ? 'active' : ''; ?>">
-                        <a class="page-link" href="<?php echo baseUrl('?route=blog&page=' . $p); ?>"><?php echo $p; ?></a>
+                        <a class="page-link" href="<?php echo baseUrl('blog?page=' . $p); ?>"><?php echo $p; ?></a>
                     </li>
                     <?php endfor; ?>
 
                     <?php if ($page < $totalPages): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?php echo baseUrl('?route=blog&page=' . ($page + 1)); ?>">
+                        <a class="page-link" href="<?php echo baseUrl('blog?page=' . ($page + 1)); ?>">
                             <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
@@ -98,7 +98,7 @@
             <div class="col-lg-8 text-center reveal">
                 <h2 class="section-title mb-4">Want Us to Write for Your Brand?</h2>
                 <p class="mb-4">Our content writing team creates SEO-optimized, conversion-focused content that drives organic traffic.</p>
-                <a href="<?php echo baseUrl('?route=services'); ?>" class="btn-cta-white">
+                <a href="<?php echo baseUrl('services'); ?>" class="btn-cta-white">
                     <i class="bi bi-pen-fill"></i> Explore Content Services
                 </a>
             </div>

@@ -82,7 +82,7 @@ function asset(string $path): string
 // Redirect helper
 function redirect(string $route): void
 {
-    header('Location: ' . baseUrl('?route=' . $route));
+    header('Location: ' . baseUrl(trim($route, '/')));
     exit;
 }
 

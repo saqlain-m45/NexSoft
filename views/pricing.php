@@ -99,7 +99,7 @@
                         <li style="opacity:0.35;text-decoration:line-through;"><i class="bi bi-x-circle" style="color:var(--text-light)!important;"></i> <?php echo $m; ?></li>
                         <?php endforeach; ?>
                     </ul>
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-pricing mt-auto">Get Started</a>
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-pricing mt-auto">Get Started</a>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -110,7 +110,7 @@
             <p style="color:var(--text-muted);font-size:0.88rem;">
                 <i class="bi bi-info-circle me-1" style="color:var(--secondary);"></i>
                 All prices are project-based estimates. Final pricing is determined after a free discovery call.
-                <a href="<?php echo baseUrl('?route=contact'); ?>" style="color:var(--secondary);font-weight:600;">Contact us</a> for a custom quote.
+                <a href="<?php echo baseUrl('contact'); ?>" style="color:var(--secondary);font-weight:600;">Contact us</a> for a custom quote.
             </p>
         </div>
     </div>
@@ -166,10 +166,10 @@
                 <h2 class="section-title mb-4">Not Sure Which Plan to Choose?</h2>
                 <p class="mb-4">Book a free 30-minute discovery call and we'll help you pick the perfect plan for your goals and budget.</p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-cta-white">
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-cta-white">
                         <i class="bi bi-calendar-check"></i> Book Free Discovery Call
                     </a>
-                    <a href="<?php echo baseUrl('?route=register'); ?>" class="btn-cta-outline-white">
+                    <a href="<?php echo baseUrl('register'); ?>" class="btn-cta-outline-white">
                         <i class="bi bi-person-plus"></i> Join Our Team
                     </a>
                 </div>

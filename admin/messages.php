@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'quick
     
     if ($message_id && !empty($reply_message)) {
         try {
-            $contact = $db->prepare("SELECT * FROM contact_messages WHERE id = ?")->execute([$message_id])->fetch();
+            $stmt = $db->prepare("SELECT * FROM contact_messages WHERE id = ?");
+            $stmt->execute([$message_id]);
+            $contact = $stmt->fetch();
             if ($contact) {
                 $db->prepare("INSERT INTO message_replies (message_id, reply_subject, reply_message, sent_by, created_at) VALUES (?, ?, ?, ?, NOW())")
                     ->execute([$message_id, $reply_subject, $reply_message, $_SESSION['user_id'] ?? 1]);
@@ -119,7 +121,7 @@ require_once __DIR__ . '/layout-header.php';
             <i class="bi bi-chat-left-text-fill me-2" style="color:var(--secondary);"></i>
             Contact Messages (<?php echo count($messages); ?>)
         </span>
-        <a href="/NexSoft/?route=contact" target="_blank" class="btn-admin-secondary">
+        <a href="<?php echo baseUrl('contact'); ?>" target="_blank" class="btn-admin-secondary">
             <i class="bi bi-box-arrow-up-right"></i> View Contact Page
         </a>
     </div>

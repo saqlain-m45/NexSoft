@@ -262,7 +262,7 @@ require_once __DIR__ . '/layout-header.php';
             <i class="bi bi-people-fill me-2" style="color:var(--secondary);"></i>
             <?php echo ucfirst($filter); ?> Registrations (<?php echo count($regs); ?>)
         </span>
-        <a href="/NexSoft/?route=register" target="_blank" class="btn-admin-secondary">
+        <a href="<?php echo baseUrl('register'); ?>" target="_blank" class="btn-admin-secondary">
             <i class="bi bi-box-arrow-up-right"></i> View Form
         </a>
     </div>

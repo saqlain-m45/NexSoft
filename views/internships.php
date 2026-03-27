@@ -14,7 +14,7 @@
                         <i class="bi bi-calendar-x display-1 text-muted mb-4"></i>
                         <h3 class="fw-bold">No Active Openings</h3>
                         <p class="text-muted">We currently don't have any open internships. Please check back later or contact us for future opportunities.</p>
-                        <a href="/NexSoft/?route=contact" class="btn btn-secondary px-4 py-2 mt-3" style="border-radius: 50px;">Get in Touch</a>
+                        <a href="<?php echo baseUrl('contact'); ?>" class="btn btn-secondary px-4 py-2 mt-3" style="border-radius: 50px;">Get in Touch</a>
                     </div>
                 </div>
             <?php else: ?>
@@ -33,7 +33,7 @@
                                 <p class="text-muted small mb-4" style="line-height: 1.6;">
                                     <?php echo htmlspecialchars(mb_strimwidth($item['description'] ?? '', 0, 120, '...')); ?>
                                 </p>
-                                <a href="/NexSoft/?route=courses" class="btn btn-outline-secondary w-100 fw-bold py-3" style="border-radius: 12px; transition: all 0.3s ease;">Apply Now</a>
+                                <a href="<?php echo baseUrl('courses'); ?>" class="btn btn-outline-secondary w-100 fw-bold py-3" style="border-radius: 12px; transition: all 0.3s ease;">Apply Now</a>
                             </div>
                         </div>
                     </div>

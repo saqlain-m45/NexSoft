@@ -108,7 +108,7 @@
             <div class="col-lg-8 text-center reveal">
                 <h2 class="section-title mb-4">Which Service Do You Need?</h2>
                 <p class="mb-4">Let's talk about your project. We'll recommend the right mix of services to achieve your goals.</p>
-                <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-cta-white">
+                <a href="<?php echo baseUrl('contact'); ?>" class="btn-cta-white">
                     <i class="bi bi-chat-dots-fill"></i> Start the Conversation
                 </a>
             </div>

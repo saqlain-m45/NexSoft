@@ -75,23 +75,23 @@ if (stripos($siteName, 'Hub') === false) {
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'about' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=about'); ?>">About Us</a>
+                            href="<?php echo baseUrl('about'); ?>">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'services' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=services'); ?>">Services</a>
+                            href="<?php echo baseUrl('services'); ?>">Services</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'blog' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=blog'); ?>">Blogs</a>
+                            href="<?php echo baseUrl('blog'); ?>">Blogs</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'pricing' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=pricing'); ?>">Pricing</a>
+                            href="<?php echo baseUrl('pricing'); ?>">Pricing</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'courses' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=courses'); ?>">Courses</a>
+                            href="<?php echo baseUrl('courses'); ?>">Courses</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($currentRoute === 'internship' || $currentRoute === 'internships') ? 'active' : ''; ?>"
@@ -99,11 +99,11 @@ if (stripos($siteName, 'Hub') === false) {
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo $currentRoute === 'contact' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=contact'); ?>">Contact</a>
+                            href="<?php echo baseUrl('contact'); ?>">Contact</a>
                     </li>
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-primary-custom nav-cta <?php echo $currentRoute === 'register' ? 'active' : ''; ?>"
-                            href="<?php echo baseUrl('?route=register'); ?>">
+                            href="<?php echo baseUrl('register'); ?>">
                             <i class="bi bi-person-plus me-1"></i> Join Us
                         </a>
                     </li>

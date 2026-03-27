@@ -227,7 +227,7 @@
                 </p>
                 <div class="actions">
                     <a class="btn primary" href="<?php echo baseUrl(); ?>"><i class="bi bi-arrow-clockwise"></i> Refresh Page</a>
-                    <a class="btn" href="<?php echo baseUrl('?route=contact'); ?>"><i class="bi bi-envelope"></i> Contact Support</a>
+                    <a class="btn" href="<?php echo baseUrl('contact'); ?>"><i class="bi bi-envelope"></i> Contact Support</a>
                 </div>
             </div>
 

@@ -23,7 +23,7 @@ class CoursesController
 
         if (!$course_id || !$name || !$email) {
             $_SESSION['error'] = 'Please fill in all required fields.';
-            header('Location: /NexSoft/?route=courses');
+            header('Location: ' . baseUrl('courses'));
             exit;
         }
 
@@ -53,7 +53,7 @@ class CoursesController
             $_SESSION['error'] = 'Failed to submit registration. Please try again.';
         }
 
-        header('Location: /NexSoft/?route=courses');
+        header('Location: ' . baseUrl('courses'));
         exit;
     }
 }

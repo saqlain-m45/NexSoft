@@ -8,7 +8,7 @@
         <div class="page-breadcrumb reveal">
             <a href="<?php echo baseUrl(); ?>">Home</a>
             <span><i class="bi bi-chevron-right"></i></span>
-            <a href="<?php echo baseUrl('?route=blog'); ?>">Blog</a>
+            <a href="<?php echo baseUrl('blog'); ?>">Blog</a>
             <span><i class="bi bi-chevron-right"></i></span>
             <span class="active"><?php echo mb_strimwidth(htmlspecialchars($post['title']), 0, 35, '...'); ?></span>
         </div>
@@ -52,7 +52,7 @@
                     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                         <span style="font-size:0.85rem;font-weight:700;color:var(--primary);">Tags:</span>
                         <?php foreach(['Technology','Development','Digital','NexSoft'] as $tag): ?>
-                        <a href="<?php echo baseUrl('?route=blog'); ?>" style="background:rgba(14,165,164,0.1);color:var(--secondary);font-size:0.78rem;font-weight:600;padding:5px 14px;border-radius:50px;border:1px solid rgba(14,165,164,0.2);transition:var(--transition);"><?php echo $tag; ?></a>
+                        <a href="<?php echo baseUrl('blog'); ?>" style="background:rgba(14,165,164,0.1);color:var(--secondary);font-size:0.78rem;font-weight:600;padding:5px 14px;border-radius:50px;border:1px solid rgba(14,165,164,0.2);transition:var(--transition);"><?php echo $tag; ?></a>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
 
                 <!-- Back to Blog -->
                 <div style="margin-top: 2rem;">
-                    <a href="<?php echo baseUrl('?route=blog'); ?>" class="btn-hero-outline" style="display:inline-flex;border-color:var(--secondary);color:var(--secondary);">
+                    <a href="<?php echo baseUrl('blog'); ?>" class="btn-hero-outline" style="display:inline-flex;border-color:var(--secondary);color:var(--secondary);">
                         <i class="bi bi-arrow-left"></i> Back to Blog
                     </a>
                 </div>
@@ -89,7 +89,7 @@
                     <div class="recent-post-item">
                         <div class="recent-post-icon"><i class="bi bi-journal-text"></i></div>
                         <div>
-                            <a href="<?php echo baseUrl('?route=blog-single&slug=' . urlencode($rp['slug'])); ?>" class="rp-title">
+                            <a href="<?php echo baseUrl('blog-single?slug=' . urlencode($rp['slug'])); ?>" class="rp-title">
                                 <?php echo htmlspecialchars(mb_strimwidth($rp['title'], 0, 60, '...')); ?>
                             </a>
                             <div class="rp-date"><?php echo date('M d, Y', strtotime($rp['created_at'])); ?></div>
@@ -105,7 +105,7 @@
                         <i class="bi bi-rocket-takeoff-fill" style="font-size:2.5rem;color:white;margin-bottom:1rem;display:block;"></i>
                         <h5 style="color:white;font-weight:700;margin-bottom:0.5rem;">Ready to Start?</h5>
                         <p style="color:rgba(255,255,255,0.8);font-size:0.85rem;margin-bottom:1.2rem;">Let's build something amazing together.</p>
-                        <a href="<?php echo baseUrl('?route=contact'); ?>" style="display:block;background:white;color:var(--secondary);border-radius:50px;padding:0.7rem;font-weight:700;font-size:0.88rem;transition:var(--transition);">
+                        <a href="<?php echo baseUrl('contact'); ?>" style="display:block;background:white;color:var(--secondary);border-radius:50px;padding:0.7rem;font-weight:700;font-size:0.88rem;transition:var(--transition);">
                             Get Free Consultation
                         </a>
                     </div>
@@ -123,7 +123,7 @@
                         ['icon'=>'bi-camera-video','name'=>'Video Editing'],
                     ];
                     foreach($sideServices as $ss): ?>
-                    <a href="<?php echo baseUrl('?route=services'); ?>" style="display:flex;align-items:center;gap:10px;padding:0.6rem 0;border-bottom:1px solid var(--border);color:var(--text);font-size:0.88rem;font-weight:500;transition:var(--transition);">
+                    <a href="<?php echo baseUrl('services'); ?>" style="display:flex;align-items:center;gap:10px;padding:0.6rem 0;border-bottom:1px solid var(--border);color:var(--text);font-size:0.88rem;font-weight:500;transition:var(--transition);">
                         <i class="bi <?php echo $ss['icon']; ?>" style="color:var(--secondary);"></i>
                         <?php echo $ss['name']; ?>
                         <i class="bi bi-arrow-right ms-auto" style="color:var(--text-light);font-size:0.75rem;"></i>

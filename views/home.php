@@ -21,10 +21,10 @@
                     NexSoft Hub delivers world-class web applications, mobile apps, and digital solutions that transform your business vision into reality. Trusted by 200+ clients globally.
                 </p>
                 <div class="hero-cta">
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-hero-primary">
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-hero-primary">
                         <i class="bi bi-rocket-takeoff-fill"></i> Start Your Project
                     </a>
-                    <a href="<?php echo baseUrl('?route=services'); ?>" class="btn-hero-outline">
+                    <a href="<?php echo baseUrl('services'); ?>" class="btn-hero-outline">
                         <i class="bi bi-play-circle"></i> Explore Services
                     </a>
                 </div>
@@ -100,7 +100,7 @@
             <?php endif; ?>
         </div>
         <div class="text-center mt-5 reveal">
-            <a href="<?php echo baseUrl('?route=services'); ?>" class="btn-hero-primary" style="display:inline-flex;">
+            <a href="<?php echo baseUrl('services'); ?>" class="btn-hero-primary" style="display:inline-flex;">
                 <i class="bi bi-grid"></i> View All Services
             </a>
         </div>
@@ -311,13 +311,13 @@
                         <li style="opacity:0.35;text-decoration:line-through;"><i class="bi bi-x-circle" style="color:var(--text-light)!important;"></i> <?php echo $m; ?></li>
                         <?php endforeach; ?>
                     </ul>
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-pricing">Get Started</a>
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-pricing">Get Started</a>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
         <div class="text-center mt-4 reveal">
-            <p style="color:var(--text-muted);font-size:0.9rem;">Need a custom quote? <a href="<?php echo baseUrl('?route=contact'); ?>" style="color:var(--secondary);font-weight:600;">Contact us</a> for enterprise pricing.</p>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Need a custom quote? <a href="<?php echo baseUrl('contact'); ?>" style="color:var(--secondary);font-weight:600;">Contact us</a> for enterprise pricing.</p>
         </div>
     </div>
 </section>
@@ -352,7 +352,7 @@
                         </div>
                         <h3 class="blog-title"><?php echo htmlspecialchars($blog['title']); ?></h3>
                         <p class="blog-excerpt"><?php echo htmlspecialchars($blog['excerpt'] ?? ''); ?></p>
-                        <a href="<?php echo baseUrl('?route=blog-single&slug=' . urlencode($blog['slug'])); ?>" class="blog-read-more">
+                        <a href="<?php echo baseUrl('blog-single?slug=' . urlencode($blog['slug'])); ?>" class="blog-read-more">
                             Read More <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -361,7 +361,7 @@
             <?php endforeach; ?>
         </div>
         <div class="text-center mt-5 reveal">
-            <a href="<?php echo baseUrl('?route=blog'); ?>" class="btn-hero-primary" style="display:inline-flex;">
+            <a href="<?php echo baseUrl('blog'); ?>" class="btn-hero-primary" style="display:inline-flex;">
                 <i class="bi bi-journal-richtext"></i> View All Articles
             </a>
         </div>
@@ -378,10 +378,10 @@
                 <h2 class="section-title mt-3 mb-4">Ready to Transform <br>Your Business Digitally?</h2>
                 <p class="mb-4">Join 200+ businesses that trust NexSoft Hub. Get your free consultation today — no obligation, no pressure.</p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="<?php echo baseUrl('?route=contact'); ?>" class="btn-cta-white">
+                    <a href="<?php echo baseUrl('contact'); ?>" class="btn-cta-white">
                         <i class="bi bi-chat-dots-fill"></i> Get Free Consultation
                     </a>
-                    <a href="<?php echo baseUrl('?route=register'); ?>" class="btn-cta-outline-white">
+                    <a href="<?php echo baseUrl('register'); ?>" class="btn-cta-outline-white">
                         <i class="bi bi-person-plus"></i> Join Our Team
                     </a>
                 </div>
