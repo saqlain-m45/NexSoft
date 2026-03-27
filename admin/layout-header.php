@@ -128,6 +128,13 @@ endif; ?>
                 </a>
                 <?php
 endif; ?>
+                <?php if (adminHasPermission('settings')): ?>
+                <a href="<?php echo adminUrl('email_templates'); ?>"
+                    class="sidebar-link <?php echo $activePage === 'email_templates' ? 'active' : ''; ?>">
+                    <i class="bi bi-envelope-at"></i> Email Templates
+                </a>
+                <?php
+endif; ?>
                 <?php if (adminHasPermission('services')): ?>
                 <a href="<?php echo adminUrl('services.php'); ?>"
                     class="sidebar-link <?php echo $activePage === 'services' ? 'active' : ''; ?>">
