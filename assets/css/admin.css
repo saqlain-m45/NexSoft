@@ -607,6 +607,257 @@ a {
     padding: 0.8rem 1.2rem;
     font-size: 0.88rem;
     font-weight: 500;
+    animation: slideInDown 0.4s ease;
+}
+
+/* ================================================================
+   ANIMATIONS
+================================================================ */
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(14, 165, 164, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(14, 165, 164, 0.6);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ================================================================
+   BUTTON ANIMATIONS & HOVERS
+================================================================ */
+
+.btn-admin-primary,
+.btn-admin-secondary,
+.btn-sm,
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.btn-admin-primary {
+    animation: scaleIn 0.3s ease;
+}
+
+.btn-admin-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14, 165, 164, 0.3);
+}
+
+.btn-admin-primary:active {
+    transform: translateY(0);
+}
+
+.btn-admin-secondary:hover {
+    background-color: #f3f4f6;
+    transform: translateY(-2px);
+}
+
+.btn-sm:hover {
+    transform: scale(1.05);
+}
+
+/* ================================================================
+   CARD ANIMATIONS & HOVERS
+================================================================ */
+
+.admin-card {
+    animation: slideInUp 0.4s ease;
+    transition: var(--transition);
+}
+
+.admin-card:hover {
+    box-shadow: 0 12px 35px rgba(11, 31, 59, 0.15);
+}
+
+.stat-card {
+    animation: slideInUp 0.5s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 15px 40px rgba(14, 165, 164, 0.2);
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+    pointer-events: none;
+}
+
+.stat-card:hover::after {
+    left: 100%;
+}
+
+/* ================================================================
+   TABLE ANIMATIONS & HOVERS
+================================================================ */
+
+.table tbody tr {
+    transition: var(--transition);
+    animation: fadeIn 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(14, 165, 164, 0.05);
+    transform: scale(1.002);
+}
+
+.table th {
+    animation: slideInDown 0.3s ease;
+}
+
+/* ================================================================
+   INPUT ANIMATIONS & HOVERS
+================================================================ */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select,
+.form-control {
+    transition: var(--transition);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+    border-color: var(--secondary) !important;
+    box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.1) !important;
+    transform: translateY(-1px);
+}
+
+/* ================================================================
+   SIDEBAR ANIMATIONS
+================================================================ */
+
+.sidebar-link {
+    position: relative;
+}
+
+.sidebar-link::after {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background: var(--secondary);
+    transition: width 0.3s ease;
+}
+
+.sidebar-link:hover::after {
+    width: calc(100% - 3rem);
+}
+
+.sidebar-link.active::after {
+    width: 0;
+}
+
+/* ================================================================
+   FORM ANIMATIONS
+================================================================ */
+
+.form-check-input:checked {
+    animation: pulse 0.3s ease;
+}
+
+/* ================================================================
+   BADGE & STATUS ANIMATIONS
+================================================================ */
+
+.badge {
+    animation: scaleIn 0.3s ease;
+}
+
+.badge:hover {
+    transform: scale(1.1);
+    animation: glow 1s ease infinite;
+}
+
+/* ================================================================
+   MODAL & DIALOG ANIMATIONS
+================================================================ */
+
+.modal.fade .modal-dialog {
+    animation: scaleIn 0.3s ease;
+}
+
+.modal-backdrop {
+    animation: fadeIn 0.3s ease;
 }
 
 /* ================================================================
