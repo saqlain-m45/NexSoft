@@ -167,6 +167,9 @@ require_once __DIR__ . '/layout-header.php';
                         <div class="d-flex gap-2">
                              <a href="generate_document.php?id=<?php echo $reg['id']; ?>&type=certificate" class="btn-action btn-view" title="Generate Certificate"><i class="bi bi-patch-check"></i></a>
                              <a href="generate_document.php?id=<?php echo $reg['id']; ?>&type=experience" class="btn-action btn-view" title="Generate Experience Letter"><i class="bi bi-file-earmark-person"></i></a>
+                             <button type="button" class="btn-action btn-primary" title="Send Email" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="prepareEmailModal('<?php echo $reg['id']; ?>', '<?php echo htmlspecialchars($reg['name']); ?>', '<?php echo htmlspecialchars($reg['email']); ?>')">
+                                 <i class="bi bi-envelope"></i>
+                             </button>
                              <form method="POST" onsubmit="return confirm('Delete this application?');">
                                 <?php echo adminCsrfField(); ?>
                                 <input type="hidden" name="action" value="delete">
@@ -191,6 +194,74 @@ function toggleAll(source) {
         checkboxes[i].checked = source.checked;
     }
 }
+
+function prepareEmailModal(applicantId, applicantName, applicantEmail) {
+    document.getElementById('emailApplicantId').value = applicantId;
+    document.getElementById('emailApplicantName').textContent = applicantName;
+    document.getElementById('emailApplicantEmail').textContent = applicantEmail;
+}
+
+function sendEmailToApplicant() {
+    const templateId = document.getElementById('emailTemplate').value;
+    const applicantId = document.getElementById('emailApplicantId').value;
+    
+    if (!templateId) {
+        alert('Please select an email template');
+        return false;
+    }
+    
+    // Redirect to send_email page with pre-selected recipient
+    window.location.href = `send_email?template=${templateId}&recipient_type=internship&recipient_id=${applicantId}`;
+}
 </script>
+
+<!-- Email Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">Send Email to Applicant</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label text-white">Applicant</label>
+                    <div class="p-2 bg-secondary bg-opacity-25 rounded">
+                        <strong class="text-white" id="emailApplicantName"></strong>
+                        <br><small class="text-muted" id="emailApplicantEmail"></small>
+                    </div>
+                    <input type="hidden" id="emailApplicantId">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-white">Select Email Template</label>
+                    <select id="emailTemplate" class="form-control">
+                        <option value="">-- Choose Template --</option>
+                        <?php 
+                        // Get email templates
+                        try {
+                            $email_templates = $db->query("SELECT id, name FROM email_templates WHERE is_active = 1 ORDER BY name")->fetchAll();
+                            foreach ($email_templates as $tmpl):
+                        ?>
+                        <option value="<?php echo $tmpl['id']; ?>"><?php echo htmlspecialchars($tmpl['name']); ?></option>
+                        <?php 
+                            endforeach;
+                        } catch(Exception $e) {
+                            // Email templates table may not exist yet
+                        }
+                        ?>
+                    </select>
+                    <small class="text-muted d-block mt-2">Templates use placeholders like {name}, {email} that will be personalized</small>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmailToApplicant()">
+                    <i class="bi bi-envelope me-1"></i> Send Email
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php require_once __DIR__ . '/layout-footer.php'; ?>

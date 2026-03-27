@@ -10,7 +10,7 @@ $error = '';
 
 $template_id = isset($_GET['template']) ? (int)$_GET['template'] : 0;
 if (!$template_id) {
-    header('Location: email_templates.php?error=No template selected');
+    header('Location: email_templates?error=No template selected');
     exit;
 }
 
@@ -20,8 +20,24 @@ $stmt->execute([$template_id]);
 $template = $stmt->fetch();
 
 if (!$template) {
-    header('Location: email_templates.php?error=Template not found');
+    header('Location: email_templates?error=Template not found');
     exit;
+}
+
+// Check if a specific recipient is pre-selected
+$pre_selected_recipient = null;
+$recipient_type = isset($_GET['recipient_type']) ? $_GET['recipient_type'] : '';
+$recipient_id = isset($_GET['recipient_id']) ? (int)$_GET['recipient_id'] : 0;
+
+if ($recipient_type && $recipient_id > 0) {
+    if ($recipient_type === 'internship') {
+        $stmt = $db->prepare("SELECT cr.id, u.full_name, u.email, u.phone FROM course_registrations cr 
+            JOIN users u ON cr.user_id = u.id 
+            WHERE cr.id = ? AND cr.course_id IS NULL");
+        $stmt->execute([$recipient_id]);
+        $pre_selected_recipient = $stmt->fetch();
+        $source = 'internships';
+    }
 }
 
 // Get available recipients from different sources
@@ -176,9 +192,15 @@ require_once __DIR__ . '/layout-header.php';
 ?>
 
 <div class="mb-4">
+    <?php if ($pre_selected_recipient): ?>
+    <a href="intern_applications" class="btn btn-secondary mb-3">
+        <i class="bi bi-arrow-left me-1"></i> Back to Applications
+    </a>
+    <?php else: ?>
     <a href="email_templates" class="btn btn-secondary mb-3">
         <i class="bi bi-arrow-left me-1"></i> Back to Templates
     </a>
+    <?php endif; ?>
     <h2 class="h3 text-white mb-0">Send Email: <?php echo htmlspecialchars($template['name']); ?></h2>
 </div>
 
@@ -217,6 +239,7 @@ require_once __DIR__ . '/layout-header.php';
             </div>
             <div class="admin-card-body">
                 <form method="POST" action="">
+                    <?php if (!$pre_selected_recipient): ?>
                     <div class="mb-4">
                         <label class="form-label text-white">Recipient Source</label>
                         <select name="source" class="form-control" onchange="this.form.submit()">
@@ -226,21 +249,38 @@ require_once __DIR__ . '/layout-header.php';
                             <option value="contact_messages" <?php echo $source === 'contact_messages' ? 'selected' : ''; ?>>Contact Messages</option>
                         </select>
                     </div>
+                    <?php else: ?>
+                    <div class="alert alert-info mb-4">
+                        <i class="bi bi-info-circle me-2"></i>Sending to: <strong><?php echo htmlspecialchars($pre_selected_recipient['full_name']); ?></strong> (<?php echo htmlspecialchars($pre_selected_recipient['email']); ?>)
+                    </div>
+                    <?php endif; ?>
 
                     <div class="mb-4">
                         <label class="form-label text-white d-block mb-3">
                             <input type="checkbox" id="selectAll"> Select All Recipients
                         </label>
                         <div style="max-height: 400px; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px;">
-                            <?php foreach ($recipients as $r): ?>
-                            <div class="p-2 border-bottom border-secondary">
-                                <input type="checkbox" name="recipients[]" class="recipient-check" value="<?php echo $r['id']; ?>">
-                                <label class="text-white ms-2">
-                                    <?php echo htmlspecialchars($r['name'] ?? $r['full_name']); ?>
-                                    <br><small class="text-muted"><?php echo htmlspecialchars($r['email']); ?></small>
-                                </label>
-                            </div>
-                            <?php endforeach; ?>
+                            <?php if ($pre_selected_recipient): ?>
+                                <!-- Pre-selected single recipient -->
+                                <div class="p-2 border-bottom border-secondary bg-success bg-opacity-10">
+                                    <input type="checkbox" name="recipients[]" class="recipient-check" value="<?php echo $pre_selected_recipient['id']; ?>" checked>
+                                    <label class="text-white ms-2">
+                                        <?php echo htmlspecialchars($pre_selected_recipient['full_name']); ?>
+                                        <br><small class="text-muted"><?php echo htmlspecialchars($pre_selected_recipient['email']); ?></small>
+                                    </label>
+                                </div>
+                            <?php else: ?>
+                                <!-- Show all recipients -->
+                                <?php foreach ($recipients as $r): ?>
+                                <div class="p-2 border-bottom border-secondary">
+                                    <input type="checkbox" name="recipients[]" class="recipient-check" value="<?php echo $r['id']; ?>">
+                                    <label class="text-white ms-2">
+                                        <?php echo htmlspecialchars($r['name'] ?? $r['full_name']); ?>
+                                        <br><small class="text-muted"><?php echo htmlspecialchars($r['email']); ?></small>
+                                    </label>
+                                </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -248,7 +288,11 @@ require_once __DIR__ . '/layout-header.php';
                         <button type="submit" name="send_now" class="btn btn-success btn-lg">
                             <i class="bi bi-envelope-at me-2"></i> Send Email to Selected Recipients
                         </button>
+                        <?php if ($pre_selected_recipient): ?>
+                        <a href="intern_applications" class="btn btn-secondary">Cancel</a>
+                        <?php else: ?>
                         <a href="email_templates" class="btn btn-secondary">Cancel</a>
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>
