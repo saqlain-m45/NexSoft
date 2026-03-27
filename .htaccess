@@ -2,20 +2,12 @@ Options -MultiViews
 RewriteEngine On
 RewriteBase /NexSoft/
 
-# Hide .php extension from URLs
+# Hide .php extension from ALL URLs
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^([^?]*)$ $1.php [L,QSA]
+RewriteRule ^(.*)$ $1.php [L,QSA]
 
-# Admin folder - allow direct file access without .php
+# Frontend routing - route to index.php for non-existent files
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} ^/NexSoft/admin/
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^admin/([^?]*)$ admin/$1.php [L,QSA]
-
-# Frontend routing - route to index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/NexSoft/admin/
-RewriteRule ^([^?]*)$ index.php?route=$1 [L,QSA]
+RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
